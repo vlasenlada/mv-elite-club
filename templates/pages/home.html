@@ -1,0 +1,145 @@
+
+{% extends "base.html" %}
+
+{% block title %}M&V Elite Club | Онлайн-школа{% endblock %}
+
+{% block content %}
+
+<!-- ГОЛОВНИЙ БЛОК -->
+<section class="hero">
+    <div class="container hero-content">
+
+        <div class="hero-text">
+            <p class="eyebrow">WELCOME TO M&V ELITE CLUB</p>
+
+            <h1>
+                Навчання, яке
+                <em>надихає</em>
+                на більше.
+            </h1>
+
+            <p class="hero-description">
+                Простір, де знання стають впевненістю.
+                Англійська, математика та підготовка до НМТ
+                у сучасному й комфортному форматі.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#courses" class="btn btn-main">
+                    Обрати напрям
+                </a>
+
+                <a href="#about" class="btn btn-light">
+                    Дізнатися більше
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-decoration">
+            <span class="decoration-small">EST. 2026</span>
+            <span class="decoration-main">M&V</span>
+            <span class="decoration-script">Elite Club</span>
+            <div class="decoration-line"></div>
+            <p>LEARN · GROW · ACHIEVE</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ПРО НАШУ ШКОЛУ -->
+<section class="intro" id="about">
+    <div class="container intro-content">
+
+        <p class="eyebrow">A DIFFERENT WAY TO LEARN</p>
+
+        <h2>
+            Твій розвиток — <em>наша місія.</em>
+        </h2>
+
+        <p>
+            M&V Elite Club — це онлайн-школа, де навчання
+            поєднується з підтримкою, мотивацією та
+            індивідуальним підходом до кожного учня.
+        </p>
+
+    </div>
+</section>
+
+<!-- НАПРЯМИ НАВЧАННЯ -->
+
+<section class="courses" id="courses">
+    <div class="container">
+
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">DISCOVER YOUR PATH</p>
+                <h2>Обери свій напрям</h2>
+            </div>
+
+            <p>
+                Програми для розвитку знань,
+                впевненості та досягнення цілей.
+            </p>
+        </div>
+
+        <div class="course-grid">
+
+            {% for course in courses %}
+
+            <article class="course-card">
+
+                <div class="course-number">
+                    {{ course.get_subject_display }}
+                </div>
+
+                <h3>{{ course.title }}</h3>
+
+                <p>{{ course.description|truncatewords:25 }}</p>
+
+                <div class="course-details">
+                    <p>
+                        <strong>Формат:</strong>
+                        {{ course.get_lesson_format_display }}
+                    </p>
+
+                    <p>
+                        <strong>Ціна за заняття:</strong>
+                        {{ course.price }} грн
+                    </p>
+                </div>
+
+<a href="{% url 'course_detail' course.pk %}" class="course-link">
+    Детальніше про курс →
+</a>
+
+            </article>
+
+            {% empty %}
+
+            <p>Незабаром тут з'являться наші курси.</p>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ЗАВЕРШАЛЬНИЙ БЛОК -->
+<section class="closing">
+    <div class="container closing-content">
+
+        <p class="eyebrow">YOUR NEXT CHAPTER</p>
+
+        <h2>
+            Твоя історія успіху починається тут.
+        </h2>
+
+        <a href="#contacts" class="btn btn-light">
+            Зв'язатися з нами
+        </a>
+
+    </div>
+</section>
+
+{% endblock %}

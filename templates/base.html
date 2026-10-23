@@ -1,0 +1,101 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}M&V Elite Club{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- Верхнє меню сайту -->
+    <header class="header">
+        <div class="container navbar">
+
+            <a href="/" class="logo">
+                M&V <span>Elite Club</span>
+            </a>
+
+            <nav class="menu">
+                <a href="/">Головна</a>
+                <a href="/#courses">Наші курси</a>
+                <a href="/#about">Про школу</a>
+                <a href="/#contacts">Контакти</a>
+            </nav>
+
+            
+<div class="nav-actions">
+
+    {% if user.is_authenticated %}
+
+        <span class="user-greeting">
+            Привіт, {{ user.username }}!
+        </span>
+        
+{% if user.role == "student" and not user.is_staff %}
+    <a href="{% url 'student_dashboard' %}" class="header-button">
+        Мій кабінет
+    </a>
+{% endif %}
+
+
+        {% if user.is_staff %}
+            <a href="/admin/" class="header-button">
+                Адмінпанель
+            </a>
+        {% endif %}
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+
+            <button type="submit" class="header-button logout-button">
+                Вийти
+            </button>
+        </form>
+
+    {% else %}
+
+        <a href="{% url 'login' %}" class="header-button">
+            Увійти
+        </a>
+
+        <a href="{% url 'register' %}" class="header-button">
+            Зареєструватися
+        </a>
+
+    {% endif %}
+
+</div>
+
+        </div>
+    </header>
+
+    <!-- Основний вміст сторінки -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Нижня частина сайту -->
+    <footer class="footer" id="contacts">
+        <div class="container footer-inner">
+
+            <div>
+                <div class="footer-logo">M&V Elite Club</div>
+                <p>Освіта, що відкриває можливості.</p>
+            </div>
+
+            <div>
+                <h3>Контакти</h3>
+                <p>Незабаром тут з'являться контакти школи.</p>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>

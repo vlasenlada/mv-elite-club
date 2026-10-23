@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+
+{% block title %}Реєстрація | M&V Elite Club{% endblock %}
+
+{% block content %}
+
+<section class="registration-section">
+    <div class="registration-container">
+
+        <p class="eyebrow">JOIN M&V ELITE CLUB</p>
+
+        <h1>Створи свій акаунт</h1>
+
+        <p class="registration-description">
+            Розпочни свій шлях до нових знань разом із нами.
+        </p>
+
+        <form method="POST" class="registration-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <small>{{ field.help_text }}</small>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-main registration-button">
+                Зареєструватися
+            </button>
+
+        </form>
+
+        <p class="registration-footer">
+            Уже маєш акаунт?
+            Сторінку входу додамо наступною.
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}

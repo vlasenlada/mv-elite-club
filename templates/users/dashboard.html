@@ -1,0 +1,133 @@
+
+{% extends "base.html" %}
+
+{% block title %}Мій кабінет | M&V Elite Club{% endblock %}
+
+{% block content %}
+
+<section class="dashboard-section">
+    <div class="container">
+
+        <div class="dashboard-welcome">
+            <p class="eyebrow">MY LEARNING SPACE</p>
+
+            <h1>
+                Вітаємо, {{ user.first_name|default:user.username }}!
+            </h1>
+
+            <p>
+                Це твій особистий простір у M&V Elite Club.
+                Тут буде все необхідне для комфортного навчання.
+            </p>
+        </div>
+
+        <div class="dashboard-grid">
+
+            
+<div class="dashboard-card">
+    <span class="dashboard-number">01 / COURSES</span>
+
+    <h2>Мої курси</h2>
+
+    {% for enrollment in enrollments %}
+
+        <div class="enrollment-item">
+
+            <h3>{{ enrollment.course.title }}</h3>
+
+            <p>
+                <strong>Предмет:</strong>
+                {{ enrollment.course.get_subject_display }}
+            </p>
+
+            <p>
+                <strong>Формат:</strong>
+                {{ enrollment.course.get_lesson_format_display }}
+            </p>
+
+            <p>
+                <strong>Статус заявки:</strong>
+                {{ enrollment.get_status_display }}
+            </p>
+
+            {% if enrollment.status == "approved" %}
+                <p class="dashboard-status">
+                    Твій запис підтверджено!
+                </p>
+            {% elif enrollment.status == "pending" %}
+                <p class="dashboard-status">
+                    Очікуємо підтвердження адміністратора.
+                </p>
+            {% endif %}
+
+            <a href="{% url 'course_detail' enrollment.course.pk %}"
+               class="course-link">
+                Переглянути курс →
+            </a>
+
+        </div>
+
+    {% empty %}
+
+        <p>
+            Ти ще не подав жодної заявки на навчання.
+        </p>
+
+        <a href="/#courses" class="course-link">
+            Обрати курс →
+        </a>
+
+    {% endfor %}
+
+</div>
+
+
+            <div class="dashboard-card">
+                <span class="dashboard-number">02 / SCHEDULE</span>
+                <h2>Мій розклад</h2>
+                <p>
+                    Переглядай дати та час
+                    своїх майбутніх занять.
+                </p>
+                <span class="dashboard-status">
+                    Незабаром
+                </span>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-number">03 / HOMEWORK</span>
+                <h2>Домашні завдання</h2>
+                <p>
+                    Отримуй завдання від викладачів
+                    та переглядай результати.
+                </p>
+                <span class="dashboard-status">
+                    Незабаром
+                </span>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-number">04 / PROGRESS</span>
+                <h2>Мій прогрес</h2>
+                <p>
+                    Стеж за власними досягненнями
+                    та результатами навчання.
+                </p>
+                <span class="dashboard-status">
+                    Незабаром
+                </span>
+            </div>
+
+        </div>
+
+        <div class="dashboard-bottom">
+            <p>Готовий до нових знань?</p>
+            <a href="/#courses" class="btn btn-main">
+                Переглянути курси
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

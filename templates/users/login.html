@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+
+{% block title %}Вхід | M&V Elite Club{% endblock %}
+
+{% block content %}
+
+<section class="registration-section">
+    <div class="registration-container">
+
+        <p class="eyebrow">WELCOME BACK</p>
+
+        <h1>З поверненням!</h1>
+
+        <p class="registration-description">
+            Увійди до свого акаунта M&V Elite Club,
+            щоб продовжити навчання.
+        </p>
+
+        <form method="POST" class="registration-form">
+            {% csrf_token %}
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+
+                    <label for="{{ field.id_for_label }}">
+                        {% if field.name == "username" %}
+                            Логін
+                        {% elif field.name == "password" %}
+                            Пароль
+                        {% else %}
+                            {{ field.label }}
+                        {% endif %}
+                    </label>
+
+                    {{ field }}
+
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit"
+                    class="btn btn-main registration-button">
+                Увійти
+            </button>
+
+        </form>
+
+        <p class="registration-footer">
+            Ще немає акаунта?
+            <a href="{% url 'register' %}">
+                Зареєструватися
+            </a>
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}

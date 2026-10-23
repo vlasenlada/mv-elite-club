@@ -1,0 +1,164 @@
+
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} | M&V Elite Club{% endblock %}
+
+{% block content %}
+
+<section class="courses">
+    <div class="container">
+
+        <a href="/#courses" class="course-link">
+            ← Повернутися до курсів
+        </a>
+
+        <div class="section-heading" style="margin-top: 40px;">
+            <div>
+                <p class="eyebrow">
+                    {{ course.get_subject_display }}
+                </p>
+
+                <h2>{{ course.title }}</h2>
+            </div>
+        </div>
+
+        <div class="course-card" style="max-width: 900px;">
+
+            <div class="course-number">
+                M&V ELITE CLUB / COURSE DETAILS
+            </div>
+
+            <h3>Про курс</h3>
+
+            <div style="white-space: pre-line;">
+                {{ course.description }}
+            </div>
+
+            <div style="margin-top: 35px;">
+                <h3>Інформація про навчання</h3>
+
+                <p>
+                    <strong>Предмет:</strong>
+                    {{ course.get_subject_display }}
+                </p>
+
+                <p>
+                    <strong>Формат занять:</strong>
+                    {{ course.get_lesson_format_display }}
+                </p>
+
+                <p>
+                    <strong>Ціна за одне заняття:</strong>
+                    {{ course.price }} грн
+                </p>
+            </div>
+
+            <!-- СТАТУС ЗАЯВКИ ТА ЗАПИС НА КУРС -->
+
+            <div style="margin-top: 35px;">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="margin-bottom: 15px; color: #560E1B;">
+                            {{ message }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
+
+                {% if user.is_authenticated %}
+
+                    {% if user.role == "student" and not user.is_staff %}
+
+                        {% if enrollment %}
+
+                            {% if enrollment.status == "pending" %}
+
+                                <div class="enrollment-notice">
+                                    <h3>Заявку надіслано!</h3>
+                                    <p>
+                                        Твоя заявка очікує підтвердження
+                                        адміністратора школи.
+                                    </p>
+                                </div>
+
+                            {% elif enrollment.status == "approved" %}
+
+                                <div class="enrollment-notice">
+                                    <h3>Ваша заявка підтверджена!</h3>
+                                    <p>
+                                        Вітаємо! Твою заявку
+                                        на навчання підтверджено.
+                                    </p>
+                                </div>
+
+                            {% elif enrollment.status == "rejected" %}
+
+                                <div class="enrollment-notice">
+                                    <h3>Заявку відхилено</h3>
+                                    <p>
+                                        Для уточнення інформації
+                                        звернися до адміністрації школи.
+                                    </p>
+                                </div>
+
+                            {% elif enrollment.status == "cancelled" %}
+
+                                <div class="enrollment-notice">
+                                    <h3>Заявку скасовано</h3>
+                                    <p>
+                                        Для повторного запису звернися
+                                        до адміністрації школи.
+                                    </p>
+                                </div>
+
+                            {% endif %}
+
+                            <a href="{% url 'student_dashboard' %}"
+                               class="btn btn-main"
+                               style="margin-top: 20px;">
+                                Перейти в мій кабінет
+                            </a>
+
+                        {% else %}
+
+                            <form method="post"
+                                  action="{% url 'enroll_course' course.pk %}">
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn btn-main"
+                                        style="border: none; cursor: pointer;">
+                                    Подати заявку на курс
+                                </button>
+                            </form>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <p>Запис на курси доступний учням.</p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p style="margin-bottom: 15px;">
+                        Щоб записатися на курс,
+                        спочатку увійди до акаунта.
+                    </p>
+
+                    <a href="{% url 'login' %}?next={{ request.path|urlencode }}"
+                       class="btn btn-main">
+                        Увійти та записатися
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
