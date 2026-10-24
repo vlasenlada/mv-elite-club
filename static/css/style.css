@@ -1348,3 +1348,42 @@ a {
         scroll-behavior: smooth;
     }
 }
+
+
+/* M&V ELITE CLUB — ENROLLMENT BADGES */
+
+.enrollment-status-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.enrollment-badge {
+    display: inline-block;
+    padding: 7px 13px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.enrollment-badge--approved {
+    background: #e8eee5;
+    color: #47684f;
+}
+
+.enrollment-badge--pending {
+    background: #f3e9d9;
+    color: #947044;
+}
+
+.enrollment-badge--rejected {
+    background: #f4e3e5;
+    color: #963e4e;
+}
+
+.enrollment-badge--neutral {
+    background: #eae5e5;
+    color: #685a5e;
+}

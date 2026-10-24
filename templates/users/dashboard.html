@@ -95,9 +95,29 @@
                         <div class="dashboard-inner-card">
                             <h3>{{ enrollment.course.title }}</h3>
 
-                            <p><strong>Предмет:</strong> {{ enrollment.course.subject }}</p>
-                            <p><strong>Формат:</strong> {{ enrollment.course.get_format_display }}</p>
-                            <p><strong>Статус заявки:</strong> {{ enrollment.get_status_display }}</p>
+                            <p><strong>Предмет:</strong> {{ enrollment.course.get_subject_display }}</p>
+                           
+<p><strong>Формат:</strong> {{ enrollment.course.get_lesson_format_display }}</p>
+
+                           
+<p class="enrollment-status-row">
+    <strong>Статус заявки:</strong>
+
+    <span class="enrollment-badge
+        {% if enrollment.status == 'approved' %}
+            enrollment-badge--approved
+        {% elif enrollment.status == 'pending' %}
+            enrollment-badge--pending
+        {% elif enrollment.status == 'rejected' %}
+            enrollment-badge--rejected
+        {% else %}
+            enrollment-badge--neutral
+        {% endif %}
+    ">
+        {{ enrollment.get_status_display }}
+    </span>
+</p>
+
 
                             {% if enrollment.status == "approved" %}
                                 <p class="dashboard-success-text">Твій запис підтверджено!</p>
