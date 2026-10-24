@@ -56,6 +56,11 @@
         <span class="next-lesson-status">
             Заплановане
         </span>
+        
+<a href="#my-schedule" class="next-lesson-button">
+    Переглянути розклад →
+</a>
+
     {% else %}
         <h2 class="next-lesson-date">
             Немає найближчих занять
@@ -111,7 +116,9 @@
             </div>
 
             <!-- SCHEDULE -->
-            <div class="dashboard-card dashboard-card-burgundy-soft">
+            
+<div class="dashboard-card dashboard-card-burgundy-soft" id="my-schedule">
+
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">02</span>
                     <span class="dashboard-card-divider"></span>
@@ -180,3 +187,4 @@
 </section>
 
 {% endblock %}
+

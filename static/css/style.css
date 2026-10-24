@@ -1317,3 +1317,34 @@ a {
         font-size: 27px;
     }
 }
+
+
+/* BURGUNDY ELITE — SCHEDULE BUTTON */
+
+.next-lesson-button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 13px 20px;
+    background: #571626;
+    color: #fff8f0;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.25s ease;
+}
+
+.next-lesson-button:hover {
+    background: #792b43;
+    color: #ffffff;
+}
+
+#my-schedule {
+    scroll-margin-top: 110px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
