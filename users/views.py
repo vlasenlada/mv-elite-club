@@ -9,6 +9,7 @@ from .models import User
 
 from enrollments.models import Enrollment
 
+from scheduling.models import Lesson
 
 def register(request):
     if request.user.is_authenticated:
@@ -33,6 +34,7 @@ def register(request):
 
 
 
+
 @login_required
 def student_dashboard(request):
     if (
@@ -45,13 +47,21 @@ def student_dashboard(request):
         student=request.user
     ).select_related("course")
 
+    lessons = Lesson.objects.filter(
+        enrollment__student=request.user
+    ).select_related(
+        "enrollment__course"
+    ).order_by("starts_at")
+
     return render(
         request,
         "users/dashboard.html",
         {
-            "enrollments": enrollments
+            "enrollments": enrollments,
+            "lessons": lessons,
         }
     )
+
 
     if (
         request.user.role != User.Role.STUDENT

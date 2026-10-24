@@ -82,18 +82,68 @@
 </div>
 
 
-            <div class="dashboard-card">
-                <span class="dashboard-number">02 / SCHEDULE</span>
-                <h2>Мій розклад</h2>
-                <p>
-                    Переглядай дати та час
-                    своїх майбутніх занять.
-                </p>
-                <span class="dashboard-status">
-                    Незабаром
-                </span>
-            </div>
+            
+<div class="dashboard-card dashboard-card--schedule">
 
+    <span class="dashboard-number">
+        02 / SCHEDULE
+    </span>
+
+    <h2>Мій розклад</h2>
+
+    <p>
+        Переглядай дати та час своїх занять.
+    </p>
+
+    {% for lesson in lessons %}
+
+        <div class="enrollment-item lesson-item">
+
+            <h3>{{ lesson.enrollment.course.title }}</h3>
+
+            <p>
+                <strong>Дата:</strong>
+                {{ lesson.starts_at|date:"d.m.Y" }}
+            </p>
+
+            <p>
+                <strong>Час:</strong>
+                {{ lesson.starts_at|time:"H:i" }}
+                –
+                {{ lesson.ends_at|time:"H:i" }}
+            </p>
+
+            <p>
+                <strong>Статус:</strong>
+                {{ lesson.get_status_display }}
+            </p>
+
+            {% if lesson.meeting_url and lesson.status == "scheduled" %}
+
+                <a href="{{ lesson.meeting_url }}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="course-link">
+                    Приєднатися до заняття →
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <p>
+            У тебе поки немає призначених занять.
+        </p>
+
+        <span class="dashboard-status">
+            Очікуємо на розклад
+        </span>
+
+    {% endfor %}
+
+</div>
             <div class="dashboard-card">
                 <span class="dashboard-number">03 / HOMEWORK</span>
                 <h2>Домашні завдання</h2>
