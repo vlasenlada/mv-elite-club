@@ -11,6 +11,8 @@ from enrollments.models import Enrollment
 
 from scheduling.models import Lesson
 
+from django.utils import timezone
+
 def register(request):
     if request.user.is_authenticated:
         return redirect("home")
@@ -35,6 +37,7 @@ def register(request):
 
 
 
+
 @login_required
 def student_dashboard(request):
     if (
@@ -53,14 +56,21 @@ def student_dashboard(request):
         "enrollment__course"
     ).order_by("starts_at")
 
+    next_lesson = lessons.filter(
+        starts_at__gte=timezone.now(),
+        status="scheduled"
+    ).first()
+
     return render(
         request,
         "users/dashboard.html",
         {
             "enrollments": enrollments,
             "lessons": lessons,
+            "next_lesson": next_lesson,
         }
     )
+
 
 
     if (

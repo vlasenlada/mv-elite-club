@@ -1,182 +1,181 @@
-
 {% extends "base.html" %}
-
-{% block title %}Мій кабінет | M&V Elite Club{% endblock %}
-
 {% block content %}
 
-<section class="dashboard-section">
-    <div class="container">
+<section class="student-dashboard luxury-dashboard">
+    <div class="dashboard-container">
 
-        <div class="dashboard-welcome">
-            <p class="eyebrow">MY LEARNING SPACE</p>
+        <!-- HERO -->
+        <section class="dashboard-hero">
+            <div class="dashboard-hero-top">
+                <span class="dashboard-hero-label">M&V ELITE CLUB</span>
+                <span class="dashboard-hero-line"></span>
+                <span class="dashboard-hero-sub">STUDENT SPACE</span>
+            </div>
 
-            <h1>
-                Вітаємо, {{ user.first_name|default:user.username }}!
+            <h1 class="dashboard-hero-title">
+                Вітаємо, {{ request.user.first_name|default:request.user.username }}!
             </h1>
 
-            <p>
-                Це твій особистий простір у M&V Elite Club.
-                Тут буде все необхідне для комфортного навчання.
+            <p class="dashboard-hero-text">
+                Твій особистий кабінет у M&V Elite Club. Тут зібрано все необхідне
+                для комфортного навчання: курси, розклад, домашні завдання та прогрес.
             </p>
-        </div>
 
-        <div class="dashboard-grid">
+            <div class="dashboard-hero-stats">
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number">{{ enrollments|length }}</span>
+                    <span class="hero-stat-label">Активні курси</span>
+                </div>
 
+                <div class="hero-stat-card">
+                    <span class="hero-stat-number">{{ lessons|length }}</span>
+                    <span class="hero-stat-label">Заняття у розкладі</span>
+                </div>
+            </div>
             
-<div class="dashboard-card">
-    <span class="dashboard-number">01 / COURSES</span>
-
-    <h2>Мої курси</h2>
-
-    {% for enrollment in enrollments %}
-
-        <div class="enrollment-item">
-
-            <h3>{{ enrollment.course.title }}</h3>
-
-            <p>
-                <strong>Предмет:</strong>
-                {{ enrollment.course.get_subject_display }}
-            </p>
-
-            <p>
-                <strong>Формат:</strong>
-                {{ enrollment.course.get_lesson_format_display }}
-            </p>
-
-            <p>
-                <strong>Статус заявки:</strong>
-                {{ enrollment.get_status_display }}
-            </p>
-
-            {% if enrollment.status == "approved" %}
-                <p class="dashboard-status">
-                    Твій запис підтверджено!
-                </p>
-            {% elif enrollment.status == "pending" %}
-                <p class="dashboard-status">
-                    Очікуємо підтвердження адміністратора.
-                </p>
-            {% endif %}
-
-            <a href="{% url 'course_detail' enrollment.course.pk %}"
-               class="course-link">
-                Переглянути курс →
-            </a>
-
-        </div>
-
-    {% empty %}
-
-        <p>
-            Ти ще не подав жодної заявки на навчання.
-        </p>
-
-        <a href="/#courses" class="course-link">
-            Обрати курс →
-        </a>
-
-    {% endfor %}
-
-</div>
-
-
-            
-<div class="dashboard-card dashboard-card--schedule">
-
-    <span class="dashboard-number">
-        02 / SCHEDULE
+<div class="next-lesson-card">
+    <span class="next-lesson-label">
+        ✦ НАЙБЛИЖЧЕ ЗАНЯТТЯ
     </span>
 
-    <h2>Мій розклад</h2>
+    {% if next_lesson %}
+        <h2 class="next-lesson-date">
+            {{ next_lesson.starts_at|date:"d.m.Y" }}
+        </h2>
 
-    <p>
-        Переглядай дати та час своїх занять.
-    </p>
-
-    {% for lesson in lessons %}
-
-        <div class="enrollment-item lesson-item">
-
-            <h3>{{ lesson.enrollment.course.title }}</h3>
-
-            <p>
-                <strong>Дата:</strong>
-                {{ lesson.starts_at|date:"d.m.Y" }}
-            </p>
-
-            <p>
-                <strong>Час:</strong>
-                {{ lesson.starts_at|time:"H:i" }}
-                –
-                {{ lesson.ends_at|time:"H:i" }}
-            </p>
-
-            <p>
-                <strong>Статус:</strong>
-                {{ lesson.get_status_display }}
-            </p>
-
-            {% if lesson.meeting_url and lesson.status == "scheduled" %}
-
-                <a href="{{ lesson.meeting_url }}"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="course-link">
-                    Приєднатися до заняття →
-                </a>
-
-            {% endif %}
-
-        </div>
-
-    {% empty %}
-
-        <p>
-            У тебе поки немає призначених занять.
+        <p class="next-lesson-time">
+            {{ next_lesson.starts_at|time:"H:i" }}
+            –
+            {{ next_lesson.ends_at|time:"H:i" }}
         </p>
 
-        <span class="dashboard-status">
-            Очікуємо на розклад
+        <p class="next-lesson-course">
+            {{ next_lesson.enrollment.course.title }}
+        </p>
+
+        <span class="next-lesson-status">
+            Заплановане
         </span>
+    {% else %}
+        <h2 class="next-lesson-date">
+            Немає найближчих занять
+        </h2>
 
-    {% endfor %}
-
+        <p class="next-lesson-course">
+            Коли з'явиться новий урок, ти побачиш його тут.
+        </p>
+    {% endif %}
 </div>
-            <div class="dashboard-card">
-                <span class="dashboard-number">03 / HOMEWORK</span>
-                <h2>Домашні завдання</h2>
-                <p>
-                    Отримуй завдання від викладачів
-                    та переглядай результати.
+
+        </section>
+
+        <!-- GRID -->
+        <section class="dashboard-grid">
+
+            <!-- COURSES -->
+            <div class="dashboard-card dashboard-card-light">
+                <div class="dashboard-card-head">
+                    <span class="dashboard-card-index">01</span>
+                    <span class="dashboard-card-divider"></span>
+                    <span class="dashboard-card-tag">COURSES</span>
+                </div>
+
+                <h2 class="dashboard-card-title">Мої курси</h2>
+                <p class="dashboard-card-text">
+                    Переглядай свої активні курси та переходь до детальної інформації.
                 </p>
-                <span class="dashboard-status">
-                    Незабаром
-                </span>
+
+                {% if enrollments %}
+                    {% for enrollment in enrollments %}
+                        <div class="dashboard-inner-card">
+                            <h3>{{ enrollment.course.title }}</h3>
+
+                            <p><strong>Предмет:</strong> {{ enrollment.course.subject }}</p>
+                            <p><strong>Формат:</strong> {{ enrollment.course.get_format_display }}</p>
+                            <p><strong>Статус заявки:</strong> {{ enrollment.get_status_display }}</p>
+
+                            {% if enrollment.status == "approved" %}
+                                <p class="dashboard-success-text">Твій запис підтверджено!</p>
+                            {% endif %}
+
+                            <a href="{% url 'course_detail' enrollment.course.id %}" class="dashboard-link">
+                                Переглянути курс →
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="dashboard-empty">
+                        <p>У тебе ще немає активних курсів.</p>
+                    </div>
+                {% endif %}
             </div>
 
-            <div class="dashboard-card">
-                <span class="dashboard-number">04 / PROGRESS</span>
-                <h2>Мій прогрес</h2>
-                <p>
-                    Стеж за власними досягненнями
-                    та результатами навчання.
+            <!-- SCHEDULE -->
+            <div class="dashboard-card dashboard-card-burgundy-soft">
+                <div class="dashboard-card-head">
+                    <span class="dashboard-card-index">02</span>
+                    <span class="dashboard-card-divider"></span>
+                    <span class="dashboard-card-tag">SCHEDULE</span>
+                </div>
+
+                <h2 class="dashboard-card-title">Мій розклад</h2>
+                <p class="dashboard-card-text">
+                    Переглядай дати та час найближчих занять.
                 </p>
-                <span class="dashboard-status">
-                    Незабаром
-                </span>
+
+                {% if lessons %}
+                    {% for lesson in lessons %}
+                        <div class="dashboard-inner-card dashboard-inner-card-accent">
+                            <h3>{{ lesson.enrollment.course.title }}</h3>
+                            <p><strong>Дата:</strong> {{ lesson.starts_at|date:"d.m.Y" }}</p>
+                            <p><strong>Час:</strong> {{ lesson.starts_at|time:"H:i" }} – {{ lesson.ends_at|time:"H:i" }}</p>
+                            <p><strong>Статус:</strong> {{ lesson.get_status_display }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="dashboard-empty">
+                        <p>Поки що занять у розкладі немає.</p>
+                    </div>
+                {% endif %}
             </div>
 
-        </div>
+            <!-- HOMEWORK -->
+            <div class="dashboard-card dashboard-card-cream">
+                <div class="dashboard-card-head">
+                    <span class="dashboard-card-index">03</span>
+                    <span class="dashboard-card-divider"></span>
+                    <span class="dashboard-card-tag">HOMEWORK</span>
+                </div>
 
-        <div class="dashboard-bottom">
-            <p>Готовий до нових знань?</p>
-            <a href="/#courses" class="btn btn-main">
-                Переглянути курси
-            </a>
-        </div>
+                <h2 class="dashboard-card-title">Домашні завдання</h2>
+                <p class="dashboard-card-text">
+                    Отримуй завдання від викладачів та переглядай результати.
+                </p>
 
+                <div class="dashboard-empty">
+                    <p>Незабаром</p>
+                </div>
+            </div>
+
+            <!-- PROGRESS -->
+            <div class="dashboard-card dashboard-card-light">
+                <div class="dashboard-card-head">
+                    <span class="dashboard-card-index">04</span>
+                    <span class="dashboard-card-divider"></span>
+                    <span class="dashboard-card-tag">PROGRESS</span>
+                </div>
+
+                <h2 class="dashboard-card-title">Мій прогрес</h2>
+                <p class="dashboard-card-text">
+                    Стеж за власними досягненнями та результатами навчання.
+                </p>
+
+                <div class="dashboard-empty">
+                    <p>Незабаром</p>
+                </div>
+            </div>
+
+        </section>
     </div>
 </section>
 
