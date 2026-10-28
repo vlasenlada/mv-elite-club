@@ -1387,3 +1387,373 @@ a {
     background: #eae5e5;
     color: #685a5e;
 }
+
+
+/* M&V ELITE CLUB — HOMEWORK */
+
+.homework-item {
+    background: #fffaf5;
+    border: 1px solid #e5d9c8;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 20px;
+}
+
+.homework-course {
+    display: block;
+    margin-bottom: 14px;
+    color: #956373;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.homework-item h3 {
+    color: #571626;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.homework-description {
+    color: #263d49;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.homework-deadline {
+    margin-top: 20px;
+    color: #571626;
+    font-size: 14px;
+}
+
+
+.homework-open-link {
+    display: inline-block;
+    width: auto;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+/* Кнопка виконання домашнього завдання */
+
+.luxury-dashboard .homework-item a.homework-open-link {
+    display: inline-block;
+    width: auto;
+    margin-top: 20px;
+    padding: 14px 22px;
+    background: #571626;
+    color: #fff8f0;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.luxury-dashboard .homework-item a.homework-open-link:hover {
+    background: #792b43;
+    color: #ffffff;
+}
+
+
+/* M&V ELITE CLUB — HOMEWORK PAGE */
+
+.homework-page {
+    min-height: 80vh;
+    background: #f1f0df;
+    padding: 60px 20px 90px;
+}
+
+.homework-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.homework-page .homework-back {
+    display: inline-block;
+    margin-bottom: 35px;
+    color: #571626;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.homework-page-header {
+    margin-bottom: 40px;
+}
+
+.homework-eyebrow,
+.homework-section-label {
+    display: block;
+    color: #956373;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.homework-page-header h1 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 5vw, 58px);
+    color: #571626;
+    margin: 15px 0;
+}
+
+.homework-subject {
+    color: #55505a;
+    font-size: 17px;
+}
+
+.homework-page-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+.homework-task-panel,
+.homework-answer-panel {
+    background: #fffaf5;
+    padding: 35px;
+    border: 1px solid #e5d9c8;
+    border-radius: 18px;
+    min-width: 0;
+}
+
+.homework-task-panel h2,
+.homework-answer-panel h2 {
+    color: #571626;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 32px;
+    margin: 24px 0;
+}
+
+.homework-task-description {
+    color: #263d49;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.homework-due-box {
+    background: #f1e6d9;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 25px;
+    color: #571626;
+}
+
+.homework-answer-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.homework-answer-form label {
+    color: #571626;
+    font-weight: 600;
+}
+
+.homework-answer-form textarea {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+    box-sizing: border-box;
+    padding: 18px;
+    border: 1px solid #dccfc2;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #263d49;
+    font: inherit;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.homework-answer-form textarea:focus {
+    outline: 2px solid #956373;
+    outline-offset: 2px;
+}
+
+.homework-answer-form .homework-submit-button {
+    display: block;
+    width: 100%;
+    padding: 17px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #571626;
+    color: #fffaf5;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.homework-answer-form .homework-submit-button:hover {
+    background: #792b43;
+}
+
+.homework-saved-notice {
+    padding: 14px;
+    background: #e8eee5;
+    border-radius: 10px;
+    color: #47684f;
+}
+
+@media (max-width: 800px) {
+    .homework-page-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .homework-task-panel,
+    .homework-answer-panel {
+        padding: 24px;
+    }
+}
+
+
+
+
+/* Кнопка виконання завдання в кабінеті */
+
+.luxury-dashboard .homework-item a.homework-open-link {
+    display: inline-block;
+    width: auto;
+    margin-top: 20px;
+    padding: 14px 22px;
+    background: #571626;
+    color: #fffaf5;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.luxury-dashboard .homework-item a.homework-open-link:hover {
+    background: #792b43;
+    color: #ffffff;
+}
+
+
+
+/* =================================
+   M&V ELITE CLUB — STUDENT PROGRESS
+================================= */
+
+.progress-result {
+    background: #fffdf9;
+    border: 1px solid #e5d9c8;
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.progress-course {
+    display: block;
+    color: #956373;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.progress-result h3 {
+    color: #571626;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.progress-grade {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.progress-grade span {
+    color: #571626;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.progress-grade small {
+    color: #786f6c;
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 9px;
+    background: #e7ddd7;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #571626;
+    border-radius: 20px;
+}
+
+.progress-checked {
+    color: #47684f;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 18px;
+}
+
+.progress-feedback {
+    border-top: 1px solid #e5d9c8;
+    margin-top: 20px;
+    padding-top: 18px;
+    color: #263d49;
+    line-height: 1.6;
+}
+
+.progress-feedback strong {
+    color: #571626;
+}
+
+.progress-feedback p {
+    margin-top: 8px;
+}
+
+.progress-empty {
+    color: #665f5c;
+    line-height: 1.7;
+}
+
+
+
+
+/* BURGUNDY ELITE — GRADE PROGRESS */
+
+progress.student-grade-progress {
+    display: block;
+    width: 100%;
+    height: 10px;
+    margin: 18px 0;
+    padding: 0;
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #e7ddd7;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+progress.student-grade-progress::-webkit-progress-bar {
+    background-color: #e7ddd7;
+    border-radius: 20px;
+}
+
+progress.student-grade-progress::-webkit-progress-value {
+    background-color: #571626;
+    border-radius: 20px;
+}
+
+progress.student-grade-progress::-moz-progress-bar {
+    background-color: #571626;
+    border-radius: 20px;
+}

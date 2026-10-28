@@ -1,0 +1,87 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="homework-page">
+    <div class="homework-page-container">
+
+        <a href="{% url 'student_dashboard' %}"
+           class="homework-back">
+            ← Повернутися до кабінету
+        </a>
+
+        <div class="homework-page-header">
+            <span class="homework-eyebrow">
+                M&V ELITE CLUB / HOMEWORK
+            </span>
+
+            <h1>{{ assignment.title }}</h1>
+
+            <p class="homework-subject">
+                {{ assignment.lesson.enrollment.course.title }}
+            </p>
+        </div>
+
+        <div class="homework-page-grid">
+
+            <div class="homework-task-panel">
+                <span class="homework-section-label">
+                    01 / ASSIGNMENT
+                </span>
+
+                <h2>Твоє завдання</h2>
+
+                <div class="homework-task-description">
+                    {{ assignment.description|linebreaks }}
+                </div>
+
+                {% if assignment.due_at %}
+                    <div class="homework-due-box">
+                        <strong>Дедлайн:</strong>
+                        <p>
+                            {{ assignment.due_at|date:"d.m.Y" }}
+                            о {{ assignment.due_at|time:"H:i" }}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="homework-answer-panel">
+                <span class="homework-section-label">
+                    02 / YOUR ANSWER
+                </span>
+
+                <h2>Твоя відповідь</h2>
+
+                {% if submission %}
+                    <p class="homework-saved-notice">
+                        Відповідь уже збережена.
+                        До оцінювання її можна змінити.
+                    </p>
+                {% endif %}
+
+                <form method="post" class="homework-answer-form">
+                    {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+
+                    <label for="{{ form.answer_text.id_for_label }}">
+                        Напиши свою відповідь
+                    </label>
+
+                    {{ form.answer_text }}
+                    {{ form.answer_text.errors }}
+
+                    <button type="submit"
+                            class="homework-submit-button">
+                        Надіслати на перевірку →
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

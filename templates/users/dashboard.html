@@ -179,9 +179,63 @@
                     Отримуй завдання від викладачів та переглядай результати.
                 </p>
 
-                <div class="dashboard-empty">
-                    <p>Незабаром</p>
-                </div>
+               
+{% if assignments %}
+    {% for assignment in assignments %}
+
+        <div class="dashboard-inner-card homework-item">
+
+            <span class="homework-course">
+                {{ assignment.lesson.enrollment.course.title }}
+            </span>
+
+            <h3>{{ assignment.title }}</h3>
+
+            <p class="homework-description">
+                {{ assignment.description|linebreaksbr }}
+            </p>
+
+            {% if assignment.due_at %}
+                <p class="homework-deadline">
+                    <strong>Дедлайн:</strong>
+                    {{ assignment.due_at|date:"d.m.Y" }}
+                    о {{ assignment.due_at|time:"H:i" }}
+                </p>
+            {% endif %}
+
+        
+
+
+{% if assignment.lesson.enrollment.status == "approved" %}
+
+    {% if assignment.id in graded_assignment_ids %}
+
+        <a href="#my-progress"
+           class="homework-submit-button homework-open-link">
+            Переглянути результат →
+        </a>
+
+    {% else %}
+
+        <a href="{% url 'submit_homework' assignment.id %}"
+           class="homework-submit-button homework-open-link">
+            Виконати завдання →
+        </a>
+
+    {% endif %}
+
+{% endif %}
+
+
+        </div>
+
+    {% endfor %}
+{% else %}
+    <div class="dashboard-empty">
+        <p>Поки що домашніх завдань немає.</p>
+    </div>
+{% endif %}
+
             </div>
 
             <!-- PROGRESS -->
@@ -197,9 +251,60 @@
                     Стеж за власними досягненнями та результатами навчання.
                 </p>
 
-                <div class="dashboard-empty">
-                    <p>Незабаром</p>
+                
+{% if graded_submissions %}
+
+    {% for result in graded_submissions %}
+
+        <div class="progress-result">
+
+            <span class="progress-course">
+                {{ result.assignment.lesson.enrollment.course.title }}
+            </span>
+
+            <h3>{{ result.assignment.title }}</h3>
+
+            <div class="progress-grade">
+                <span>{{ result.grade }}</span>
+                <small>/ 100 балів</small>
+            </div>
+
+           
+
+<progress
+    class="student-grade-progress"
+    value="{{ result.grade }}"
+    max="100"
+    style="width: 100%; height: 10px; accent-color: #571626;">
+    {{ result.grade }}%
+</progress>
+
+
+
+            <p class="progress-checked">
+                ✓ Перевірено
+            </p>
+
+            {% if result.feedback %}
+                <div class="progress-feedback">
+                    <strong>Коментар викладача:</strong>
+                    <p>{{ result.feedback|linebreaksbr }}</p>
                 </div>
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p class="progress-empty">
+        Поки немає оцінених робіт.
+        Твої результати з'являться тут після перевірки.
+    </p>
+
+{% endif %}
+
             </div>
 
         </section>

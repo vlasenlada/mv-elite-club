@@ -13,6 +13,9 @@ from scheduling.models import Lesson
 
 from django.utils import timezone
 
+from learning.models import Assignment, Submission
+
+
 def register(request):
     if request.user.is_authenticated:
         return redirect("home")
@@ -61,6 +64,27 @@ def student_dashboard(request):
         status="scheduled"
     ).first()
 
+
+    assignments = Assignment.objects.filter(
+        lesson__enrollment__student=request.user
+    ).select_related(
+        "lesson__enrollment__course"
+    ).order_by("due_at", "-created_at")
+
+
+    graded_submissions = Submission.objects.filter(
+        student=request.user,
+        grade__isnull=False
+    ).select_related(
+        "assignment__lesson__enrollment__course"
+    ).order_by("-submitted_at")
+
+
+    graded_assignment_ids = set(
+        graded_submissions.values_list("assignment_id", flat=True)
+    )
+
+
     return render(
         request,
         "users/dashboard.html",
@@ -68,6 +92,9 @@ def student_dashboard(request):
             "enrollments": enrollments,
             "lessons": lessons,
             "next_lesson": next_lesson,
+            "assignments": assignments,
+            "graded_submissions": graded_submissions,
+            "graded_assignment_ids": graded_assignment_ids,
         }
     )
 
