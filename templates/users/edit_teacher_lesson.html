@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="teacher-edit-page">
+
+    <div class="teacher-edit-container">
+
+        <a href="{% url 'teacher_dashboard' %}"
+           class="teacher-edit-back">
+            ← Повернутися до кабінету
+        </a>
+
+        <div class="teacher-edit-card">
+
+            <span class="teacher-edit-label">
+                M&V ELITE CLUB — TEACHER SPACE
+            </span>
+
+            <h1>Редагувати заняття</h1>
+
+            <p class="teacher-edit-description">
+                Зміни дату, час або посилання на онлайн-урок.
+            </p>
+
+            <div class="teacher-edit-info">
+
+                <strong>
+                    {{ lesson.enrollment.course.title }}
+                </strong>
+
+                <p>
+                    Учень:
+                    {{ lesson.enrollment.student.username }}
+                </p>
+
+            </div>
+
+            <form method="post" class="teacher-edit-form">
+
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <label for="{{ form.starts_at.id_for_label }}">
+                    Початок заняття
+                </label>
+
+                {{ form.starts_at }}
+                {{ form.starts_at.errors }}
+
+                <label for="{{ form.ends_at.id_for_label }}">
+                    Завершення заняття
+                </label>
+
+                {{ form.ends_at }}
+                {{ form.ends_at.errors }}
+
+                <label for="{{ form.meeting_url.id_for_label }}">
+                    Google Meet / Zoom
+                </label>
+
+                {{ form.meeting_url }}
+                {{ form.meeting_url.errors }}
+
+                <button type="submit">
+                    Зберегти зміни
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

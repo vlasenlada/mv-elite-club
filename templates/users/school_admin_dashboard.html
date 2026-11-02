@@ -1,0 +1,373 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="school-admin-page">
+    <div class="school-admin-container">
+        
+{% if messages %}
+    <div class="school-admin-notifications">
+        {% for message in messages %}
+            <div class="school-admin-notification">
+                ✓ {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+        <div class="school-admin-hero">
+            <span>M&V ELITE CLUB — ADMIN SPACE</span>
+            <h1>Панель адміністратора</h1>
+            <p>Управління онлайн-школою</p>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+
+        <div class="school-admin-stats">
+
+            <div class="school-admin-stat">
+                <span>01 / ENROLLMENTS</span>
+                <h3>Заявки</h3>
+                <strong>{{ enrollments.count }}</strong>
+            </div>
+
+            <div class="school-admin-stat">
+                <span>02 / STUDENTS</span>
+                <h3>Учні</h3>
+                <strong>{{ students.count }}</strong>
+            </div>
+
+            <div class="school-admin-stat">
+                <span>03 / TEACHERS</span>
+                <h3>Викладачі</h3>
+                <strong>{{ teachers.count }}</strong>
+            </div>
+
+            <div class="school-admin-stat">
+                <span>04 / LESSONS</span>
+                <h3>Заняття</h3>
+                <strong>{{ lessons.count }}</strong>
+            </div>
+
+        </div>
+
+        <!-- ЗАЯВКИ -->
+
+        <div class="school-admin-section">
+
+            <h2>Заявки на навчання</h2>
+
+            {% if enrollments %}
+
+                <div class="school-admin-table-wrap">
+                    <table class="school-admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Учень</th>
+                                <th>Курс</th>
+                                <th>Статус</th>
+                                <th>Дата заявки</th>
+                                <th>Дії</th>
+                                <th>Викладач на курсі</th>
+
+                                
+                            </tr>
+                        </thead>
+
+                        
+<tbody>
+    {% for enrollment in enrollments %}
+
+        <tr>
+            <td>
+                {{ enrollment.student.username }}
+            </td>
+
+            <td>
+                {{ enrollment.course.title }}
+            </td>
+
+            <td>
+                {{ enrollment.get_status_display }}
+            </td>
+
+            <td>
+                {{ enrollment.created_at|date:"d.m.Y" }}
+            </td>
+
+            <!-- ЗМІНА СТАТУСУ ЗАЯВКИ -->
+            <td>
+                <form
+                    method="post"
+                    action="{% url 'update_enrollment_status' enrollment.id %}"
+                    class="admin-status-form"
+                >
+                    {% csrf_token %}
+
+                    <select name="status">
+
+                        {% for status_value, status_label in enrollment_status_choices %}
+
+                            <option
+                                value="{{ status_value }}"
+                                {% if enrollment.status == status_value %}selected{% endif %}
+                            >
+                                {{ status_label }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <button type="submit">
+                        Зберегти
+                    </button>
+
+                </form>
+            </td>
+
+            <!-- ВИКЛАДАЧ НА КУРСІ -->
+            <td>
+
+                {% if enrollment.status == "approved" %}
+
+                    <form
+                        method="post"
+                        action="{% url 'assign_enrollment_teacher' enrollment.id %}"
+                        class="admin-teacher-form"
+                    >
+                        {% csrf_token %}
+
+                        <select name="teacher_id" required>
+
+                            <option value="">
+                                Оберіть викладача
+                            </option>
+
+                            {% for teacher in teachers %}
+
+                                {% if teacher.is_active and not teacher.is_staff %}
+
+                                    <option
+                                        value="{{ teacher.id }}"
+                                        {% if enrollment.teacher_id == teacher.id %}selected{% endif %}
+                                    >
+                                        {{ teacher.username }}
+                                    </option>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </select>
+
+                        <button type="submit">
+                            Призначити на курс
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <span>
+                        Спочатку підтвердьте заявку
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+    {% endfor %}
+</tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <p>Заявок поки немає.</p>
+            {% endif %}
+
+        </div>
+
+        <!-- УЧНІ -->
+
+        <div class="school-admin-section">
+
+            <h2>Учні школи</h2>
+
+            {% if students %}
+
+                <div class="school-admin-table-wrap">
+                    <table class="school-admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Логін</th>
+                                <th>Ім'я</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ student.username }}</td>
+                                <td>
+                                    {{ student.get_full_name|default:"—" }}
+                                </td>
+                                <td>{{ student.email|default:"—" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <p>Зареєстрованих учнів поки немає.</p>
+            {% endif %}
+
+        </div>
+
+        <!-- ВИКЛАДАЧІ -->
+
+        <div class="school-admin-section">
+
+            <h2>Викладачі</h2>
+
+            {% if teachers %}
+
+                <div class="school-admin-table-wrap">
+                    <table class="school-admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Логін</th>
+                                <th>Ім'я</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for teacher in teachers %}
+                            <tr>
+                                <td>{{ teacher.username }}</td>
+                                <td>
+                                    {{ teacher.get_full_name|default:"—" }}
+                                </td>
+                                <td>{{ teacher.email|default:"—" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <p>Викладачів поки немає.</p>
+            {% endif %}
+
+        </div>
+
+        <!-- РОЗКЛАД -->
+
+        <div class="school-admin-section">
+
+            <h2>Усі заняття</h2>
+
+            {% if lessons %}
+
+                <div class="school-admin-table-wrap">
+                    <table class="school-admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Курс</th>
+                                <th>Учень</th>
+                                <th>Викладач</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                                <th>Призначення</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for lesson in lessons %}
+                            <tr>
+                                <td>
+                                    {{ lesson.enrollment.course.title }}
+                                </td>
+                                <td>
+                                    {{ lesson.enrollment.student.username }}
+                                </td>
+                                <td>
+                                    {% if lesson.teacher %}
+                                        {{ lesson.teacher.username }}
+                                    {% else %}
+                                        Не призначено
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ lesson.starts_at|date:"d.m.Y H:i" }}
+                                </td>
+                                <td>
+                                    {{ lesson.get_status_display }}
+                                </td>
+                               
+<td>
+    {% if lesson.status == "scheduled" %}
+
+        <form
+            method="post"
+            action="{% url 'assign_lesson_teacher' lesson.id %}"
+            class="admin-teacher-form"
+        >
+            {% csrf_token %}
+
+            <select name="teacher_id" required>
+                <option value="">Оберіть викладача</option>
+
+                {% for teacher in teachers %}
+                    {% if teacher.is_active and not teacher.is_staff %}
+                        <option
+                            value="{{ teacher.id }}"
+                            {% if lesson.teacher_id == teacher.id %}selected{% endif %}
+                        >
+                            {{ teacher.username }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <button type="submit">
+                Призначити
+            </button>
+        </form>
+
+    {% else %}
+        <span>Заняття завершене або скасоване</span>
+    {% endif %}
+</td>
+ 
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <p>Занять поки немає.</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

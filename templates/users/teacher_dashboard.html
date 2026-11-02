@@ -1,0 +1,592 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="teacher-dashboard">
+    <div class="teacher-container">
+
+{% if messages %}
+    <div class="teacher-notifications">
+        {% for message in messages %}
+            <div class="teacher-notification">
+                ✓ {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+        <!-- ВІТАЛЬНИЙ БЛОК -->
+        <div class="teacher-hero">
+
+            <span class="teacher-label">
+                M&V ELITE CLUB — TEACHER SPACE
+            </span>
+
+            <h1>
+                Вітаємо,
+                {{ request.user.first_name|default:request.user.username }}!
+            </h1>
+
+            <p>
+                Твій простір для організації навчання,
+                керування заняттями та перевірки
+                домашніх завдань учнів.
+            </p>
+
+        </div>
+
+        <!-- ОСНОВНІ РОЗДІЛИ -->
+        <div class="teacher-grid">
+
+            <!-- 01. МОЇ УЧНІ -->
+            <div class="teacher-card">
+
+                <span class="teacher-card-number">
+                    01 / STUDENTS
+                </span>
+
+                <h2>Мої учні</h2>
+
+                <p>
+                    Переглядай учнів, які навчаються
+                    на твоїх заняттях.
+                </p>
+
+                {% if student_entries %}
+
+                    {% for entry in student_entries %}
+
+                        <div class="teacher-student-item">
+
+                            <h3>
+                                {{ entry.student.get_full_name|default:entry.student.username }}
+                            </h3>
+
+                            <p>
+                                Курс: {{ entry.course.title }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>Поки немає призначених учнів.</p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- 02. МІЙ РОЗКЛАД -->
+            <div class="teacher-card">
+
+                <span class="teacher-card-number">
+                    02 / SCHEDULE
+                </span>
+
+                <h2>Мій розклад</h2>
+
+                <p>
+                    Переглядай майбутні заняття
+                    та історію проведених уроків.
+                </p>
+
+
+<div class="teacher-lesson-section">
+
+    <h3>Створити нове заняття</h3>
+
+    <form method="post" class="teacher-lesson-form">
+
+        {% csrf_token %}
+
+        <input
+            type="hidden"
+            name="form_type"
+            value="lesson"
+        >
+
+        {% if lesson_form.non_field_errors %}
+            <div class="form-errors">
+                {{ lesson_form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <label for="{{ lesson_form.enrollment.id_for_label }}">
+            Учень та курс
+        </label>
+        {{ lesson_form.enrollment }}
+        {{ lesson_form.enrollment.errors }}
+
+        <label for="{{ lesson_form.starts_at.id_for_label }}">
+            Початок заняття
+        </label>
+        {{ lesson_form.starts_at }}
+        {{ lesson_form.starts_at.errors }}
+
+        <label for="{{ lesson_form.ends_at.id_for_label }}">
+            Завершення заняття
+        </label>
+        {{ lesson_form.ends_at }}
+        {{ lesson_form.ends_at.errors }}
+
+        <label for="{{ lesson_form.meeting_url.id_for_label }}">
+            Посилання на урок (необов'язково)
+        </label>
+        {{ lesson_form.meeting_url }}
+        {{ lesson_form.meeting_url.errors }}
+
+        <button type="submit">
+            Створити заняття
+        </button>
+
+    </form>
+
+</div>
+
+
+                <h3>Майбутні заняття</h3>
+
+                {% if upcoming_lessons %}
+
+                    {% for lesson in upcoming_lessons %}
+
+                        <div class="teacher-lesson-item">
+
+                            <h3>
+                                {{ lesson.enrollment.course.title }}
+                            </h3>
+
+                            <p>
+                                <strong>Учень:</strong>
+                                {{ lesson.enrollment.student.username }}
+                            </p>
+
+                            <p>
+                                <strong>Дата:</strong>
+                                {{ lesson.starts_at|date:"d.m.Y" }}
+                            </p>
+
+                            <p>
+                                <strong>Час:</strong>
+                                {{ lesson.starts_at|time:"H:i" }}
+                                —
+                                {{ lesson.ends_at|time:"H:i" }}
+                            </p>
+
+                            <p>
+                                <strong>Статус:</strong>
+                                {{ lesson.get_status_display }}
+                            </p>
+
+     
+<!-- GOOGLE MEET / ZOOM -->
+
+<div class="teacher-meeting-section">
+
+    <h4>Посилання на онлайн-заняття</h4>
+
+    <form
+        method="post"
+        action="{% url 'update_meeting_link' lesson.id %}"
+        class="teacher-meeting-form"
+    >
+        {% csrf_token %}
+
+        <input
+            type="url"
+            name="meeting_url"
+            placeholder="https://meet.google.com/..."
+            value="{{ lesson.meeting_url|default_if_none:'' }}"
+        >
+
+        <button type="submit">
+            Зберегти посилання
+        </button>
+
+    </form>
+
+    {% if lesson.meeting_url %}
+
+        <a
+            href="{{ lesson.meeting_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="teacher-meeting-link"
+        >
+            Відкрити онлайн-заняття ↗
+        </a>
+
+    {% endif %}
+
+</div>
+     
+
+{% if lesson.status == "scheduled" %}
+    <a href="{% url 'edit_teacher_lesson' lesson.id %}"
+       class="teacher-edit-lesson-btn">
+        ✎ Редагувати заняття
+    </a>
+{% endif %}
+
+                  
+<div class="teacher-lesson-actions">
+
+    {% if lesson.status != "completed" %}
+
+        <form
+            method="post"
+            action="{% url 'update_lesson_status' lesson.id %}"
+        >
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="status"
+                value="completed"
+            >
+
+            <button type="submit" class="lesson-btn-complete">
+                ✓ Проведено
+            </button>
+        </form>
+
+    {% endif %}
+
+
+    {% if lesson.status != "cancelled" %}
+
+        <form
+            method="post"
+            action="{% url 'update_lesson_status' lesson.id %}"
+        >
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="status"
+                value="cancelled"
+            >
+
+            <button type="submit" class="lesson-btn-cancel">
+                Скасувати
+            </button>
+        </form>
+
+    {% endif %}
+
+
+    {% if lesson.status != "scheduled" %}
+
+        <form
+            method="post"
+            action="{% url 'update_lesson_status' lesson.id %}"
+        >
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="status"
+                value="scheduled"
+            >
+
+            <button type="submit" class="lesson-btn-restore">
+                Повернути в розклад
+            </button>
+        </form>
+
+    {% endif %}
+
+</div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>Майбутніх занять поки немає.</p>
+
+                {% endif %}
+
+
+                <h3>Історія занять</h3>
+
+                {% if past_lessons %}
+
+                    {% for lesson in past_lessons %}
+
+                        <div class="teacher-lesson-item">
+
+                            <h3>
+                                {{ lesson.enrollment.course.title }}
+                            </h3>
+
+                            <p>
+                                <strong>Учень:</strong>
+                                {{ lesson.enrollment.student.username }}
+                            </p>
+
+                            <p>
+                                <strong>Дата:</strong>
+                                {{ lesson.starts_at|date:"d.m.Y" }}
+                            </p>
+
+                            <p>
+                                <strong>Час:</strong>
+                                {{ lesson.starts_at|time:"H:i" }}
+                                —
+                                {{ lesson.ends_at|time:"H:i" }}
+                            </p>
+
+                            <p>
+                                <strong>Статус:</strong>
+                                {{ lesson.get_status_display }}
+                            </p>
+
+         
+                   
+<div class="teacher-lesson-actions">
+{% if lesson.status != "completed" %}
+    <form method="post"
+    
+          action="{% url 'update_lesson_status' lesson.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="status" value="completed">
+        <button type="submit" class="lesson-btn-complete">
+            ✓ Проведено
+        </button>
+    </form>
+    {% endif %}
+
+    <form method="post"
+          action="{% url 'update_lesson_status' lesson.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="status" value="cancelled">
+        <button type="submit" class="lesson-btn-cancel">
+            Скасувати
+        </button>
+    </form>
+
+    <form method="post"
+          action="{% url 'update_lesson_status' lesson.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="status" value="scheduled">
+        <button type="submit" class="lesson-btn-restore">
+            Повернути в розклад
+        </button>
+    </form>
+
+</div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>Історія занять поки порожня.</p>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- 03. ДОМАШНІ ЗАВДАННЯ -->
+            <div class="teacher-card">
+
+                <span class="teacher-card-number">
+                    03 / HOMEWORK
+                </span>
+
+                <h2>Домашні завдання</h2>
+
+                <p>
+                    Створюй завдання та призначай
+                    їх своїм учням.
+                </p>
+
+                
+<div class="teacher-homework-section">
+
+    <h3>Створити нове завдання</h3>
+
+    <form method="post" class="teacher-homework-form">
+        {% csrf_token %}
+
+        {% if assignment_form.non_field_errors %}
+            <div class="form-errors">
+                {{ assignment_form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <label for="{{ assignment_form.lesson.id_for_label }}">
+            Заняття
+        </label>
+        {{ assignment_form.lesson }}
+        {{ assignment_form.lesson.errors }}
+
+        <label for="{{ assignment_form.title.id_for_label }}">
+            Назва завдання
+        </label>
+        {{ assignment_form.title }}
+        {{ assignment_form.title.errors }}
+
+        <label for="{{ assignment_form.description.id_for_label }}">
+            Опис завдання
+        </label>
+        {{ assignment_form.description }}
+        {{ assignment_form.description.errors }}
+
+        <label for="{{ assignment_form.due_at.id_for_label }}">
+            Термін виконання
+        </label>
+        {{ assignment_form.due_at }}
+        {{ assignment_form.due_at.errors }}
+
+        <button type="submit">
+            Створити завдання
+        </button>
+    </form>
+
+    <h3>Призначені завдання</h3>
+
+    {% if teacher_assignments %}
+
+        {% for assignment in teacher_assignments %}
+
+            <div class="teacher-assignment-item">
+
+                <strong>{{ assignment.title }}</strong>
+
+                <p>
+                    Учень:
+                    {{ assignment.lesson.enrollment.student.username }}
+                </p>
+
+                <p>
+                    Курс:
+                    {{ assignment.lesson.enrollment.course.title }}
+                </p>
+
+                <p>
+                    Термін:
+                    {{ assignment.due_at|date:"d.m.Y H:i"|default:"Не вказано" }}
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>Поки немає створених завдань.</p>
+
+    {% endif %}
+
+</div>
+
+
+            </div>
+
+
+            <!-- 04. ПЕРЕВІРКА РОБІТ -->
+            <div class="teacher-card">
+
+                <span class="teacher-card-number">
+                    04 / REVIEW
+                </span>
+
+                <h2>Перевірка робіт</h2>
+
+                <p>
+                    Переглядай відповіді учнів,
+                    виставляй оцінки та залишай коментарі.
+                </p>
+
+               
+{% if teacher_submissions %}
+
+    {% for submission in teacher_submissions %}
+
+        <div class="teacher-review-item">
+
+            <h3>{{ submission.assignment.title }}</h3>
+
+            <p>
+                <strong>Учень:</strong>
+                {{ submission.student.username }}
+            </p>
+
+            <p>
+                <strong>Курс:</strong>
+                {{ submission.assignment.lesson.enrollment.course.title }}
+            </p>
+
+            <p><strong>Відповідь учня:</strong></p>
+
+            <div class="teacher-answer-text">
+               {{ submission.answer_text|linebreaksbr }}
+            </div>
+
+            <form
+                method="post"
+                action="{% url 'review_submission' submission.id %}"
+                class="teacher-review-form"
+            >
+                {% csrf_token %}
+
+                <label for="grade-{{ submission.id }}">
+                    Оцінка (0–100)
+                </label>
+
+                <input
+                    type="number"
+                    id="grade-{{ submission.id }}"
+                    name="grade"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="{{ submission.grade|default_if_none:'' }}"
+                    required
+                >
+
+                <label for="feedback-{{ submission.id }}">
+                    Коментар викладача
+                </label>
+
+                <textarea
+                    id="feedback-{{ submission.id }}"
+                    name="feedback"
+                    rows="4"
+                >{{ submission.feedback|default_if_none:'' }}</textarea>
+
+                <button type="submit">
+                    Зберегти оцінку
+                </button>
+
+            </form>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>Поки немає робіт для перевірки.</p>
+
+{% endif %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

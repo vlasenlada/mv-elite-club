@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from enrollments.models import Enrollment
-
+from django.conf import settings
 
 class Lesson(models.Model):
 
@@ -18,6 +18,16 @@ class Lesson(models.Model):
         related_name="lessons",
         verbose_name="Запис учня на курс"
     )
+    
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="teaching_lessons",
+        verbose_name="Викладач"
+    )
+
 
     starts_at = models.DateTimeField(
         verbose_name="Дата та час початку"

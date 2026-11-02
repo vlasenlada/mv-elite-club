@@ -27,6 +27,16 @@ class Enrollment(models.Model):
         verbose_name="Курс"
     )
 
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_enrollments",
+        limit_choices_to={"role": "teacher"},
+        verbose_name="Призначений викладач"
+    )
+
     status = models.CharField(
         max_length=20,
         choices=Status.choices,

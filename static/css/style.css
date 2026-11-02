@@ -1757,3 +1757,898 @@ progress.student-grade-progress::-moz-progress-bar {
     background-color: #571626;
     border-radius: 20px;
 }
+
+
+/* M&V ELITE CLUB — TEACHER DASHBOARD */
+
+.teacher-dashboard {
+    background: #f1f0df;
+    min-height: 85vh;
+    padding: 60px 20px 100px;
+}
+
+.teacher-container {
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.teacher-hero {
+    background: linear-gradient(135deg, #4c1021, #751a35);
+    border-radius: 24px;
+    padding: 65px;
+    margin-bottom: 35px;
+    color: #fff8f0;
+    box-shadow: 0 20px 45px rgba(55, 15, 28, 0.12);
+}
+
+.teacher-label {
+    display: block;
+    color: #ead1c6;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    margin-bottom: 25px;
+}
+
+.teacher-hero h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(36px, 5vw, 62px);
+    color: #fff8f0;
+    margin-bottom: 20px;
+}
+
+.teacher-hero p {
+    color: #f4e9e4;
+    font-size: 18px;
+    line-height: 1.8;
+    max-width: 720px;
+}
+
+.teacher-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.teacher-card {
+    background: #fffaf5;
+    border: 1px solid #e5d9c8;
+    border-radius: 20px;
+    padding: 40px;
+    min-height: 250px;
+    box-shadow: 0 12px 28px rgba(60, 25, 35, 0.04);
+}
+
+.teacher-card-number {
+    color: #956373;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.teacher-card h2 {
+    font-family: Georgia, serif;
+    color: #571626;
+    font-size: 34px;
+    margin: 30px 0 15px;
+}
+
+.teacher-card p {
+    color: #263d49;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.teacher-coming {
+    display: inline-block;
+    margin-top: 24px;
+    color: #956373;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 800px) {
+    .teacher-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-hero {
+        padding: 35px 25px;
+    }
+
+    .teacher-card {
+        padding: 28px;
+        min-height: auto;
+    }
+}
+
+
+/* TEACHER DASHBOARD — HOMEWORK REVIEW */
+
+.teacher-review-item {
+    margin-top: 22px;
+    padding: 22px;
+    background: #fffdf9;
+    border: 1px solid #e9dcce;
+    border-radius: 16px;
+}
+
+.teacher-review-item h3 {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    color: #571626;
+    margin-bottom: 15px;
+}
+
+.teacher-review-item p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.teacher-answer-text {
+    background: #f2ebe3;
+    padding: 18px;
+    border-radius: 12px;
+    margin: 14px 0 22px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.teacher-review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.teacher-review-form label {
+    color: #571626;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.teacher-review-form input,
+.teacher-review-form textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border: 1px solid #d8c8bc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #263d49;
+    font: inherit;
+}
+
+.teacher-review-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.teacher-review-form input:focus,
+.teacher-review-form textarea:focus {
+    outline: 2px solid #956373;
+    outline-offset: 2px;
+}
+
+.teacher-review-form button {
+    width: 100%;
+    padding: 15px 20px;
+    margin-top: 8px;
+    background: #571626;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.teacher-review-form button:hover {
+    background: #781d39;
+}
+
+@media (max-width: 768px) {
+    .teacher-review-item {
+        padding: 16px;
+    }
+}
+
+
+/* TEACHER HOMEWORK — M&V ELITE CLUB */
+
+.teacher-homework-section {
+    margin-top: 24px;
+}
+
+.teacher-homework-section h3 {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    color: #571626;
+    margin: 24px 0 18px;
+}
+
+.teacher-homework-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid #e9dcce;
+    border-radius: 16px;
+    background: #fffdf9;
+}
+
+.teacher-homework-form label {
+    color: #571626;
+    font-weight: 600;
+}
+
+.teacher-homework-form input,
+.teacher-homework-form select,
+.teacher-homework-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #d8c8bc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #263d49;
+    font: inherit;
+}
+
+.teacher-homework-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.teacher-homework-form button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #571626;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.teacher-homework-form button:hover {
+    background: #781d39;
+}
+
+.teacher-assignment-item {
+    margin-top: 14px;
+    padding: 18px;
+    background: #fffdf9;
+    border: 1px solid #e9dcce;
+    border-radius: 12px;
+}
+
+.teacher-assignment-item strong {
+    color: #571626;
+}
+
+.teacher-assignment-item p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.teacher-homework-form .errorlist {
+    color: #a32640;
+    font-size: 13px;
+}
+
+/* M&V ELITE CLUB — HOMEWORK STATUS */
+
+.homework-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 13px 20px;
+    margin-top: 12px;
+
+    background: #f3e7d5;
+    color: #785225;
+
+    border: 1px solid #dcc7aa;
+    border-radius: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.homework-pending-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* M&V ELITE CLUB — SUCCESS MESSAGE */
+
+.teacher-notifications {
+    margin-bottom: 24px;
+}
+
+.teacher-notification {
+    background: #f3e9e4;
+    color: #571626;
+    padding: 18px 22px;
+    border: 1px solid #d8b9b0;
+    border-left: 4px solid #571626;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* M&V ELITE CLUB — TEACHER LESSON FORM */
+
+.teacher-lesson-section {
+    margin: 24px 0 30px;
+}
+
+.teacher-lesson-section h3 {
+    font-family: Georgia, serif;
+    color: #571626;
+    font-size: 23px;
+    margin-bottom: 18px;
+}
+
+.teacher-lesson-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid #e9dcce;
+    border-radius: 16px;
+    background: #fffdf9;
+}
+
+.teacher-lesson-form label {
+    color: #571626;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.teacher-lesson-form input:not([type="hidden"]),
+.teacher-lesson-form select {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #d8c8bc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #263d49;
+    font: inherit;
+}
+
+.teacher-lesson-form input:focus,
+.teacher-lesson-form select:focus {
+    outline: 2px solid #956373;
+    outline-offset: 2px;
+}
+
+.teacher-lesson-form button {
+    margin-top: 12px;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #571626;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.teacher-lesson-form button:hover {
+    background: #781d39;
+}
+
+.teacher-lesson-form .errorlist {
+    color: #a32640;
+    font-size: 13px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+@media (max-width: 768px) {
+    .teacher-lesson-form {
+        padding: 16px;
+    }
+}
+
+
+/* M&V ELITE CLUB — LESSON BUTTONS */
+
+.teacher-lesson-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+}
+
+.teacher-lesson-actions form {
+    flex: 1 1 120px;
+    margin: 0;
+}
+
+.teacher-lesson-actions button {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Проведено */
+.lesson-btn-complete {
+    background: #571626;
+    color: white;
+    border: 1px solid #571626;
+}
+
+.lesson-btn-complete:hover {
+    background: #781d39;
+}
+
+/* Скасувати */
+.lesson-btn-cancel {
+    background: #fff8f5;
+    color: #8b3445;
+    border: 1px solid #d5b8b5;
+}
+
+.lesson-btn-cancel:hover {
+    background: #f5e3e2;
+}
+
+/* Повернути в розклад */
+.lesson-btn-restore {
+    background: #f3e9df;
+    color: #571626;
+    border: 1px solid #d9c7b8;
+}
+
+.lesson-btn-restore:hover {
+    background: #e9d8ca;
+}
+
+
+/* M&V ELITE CLUB — MEETING LINKS */
+
+.teacher-meeting-section {
+    margin: 20px 0;
+    padding: 18px;
+    background: #fffaf5;
+    border: 1px solid #e5d9c8;
+    border-radius: 12px;
+}
+
+.teacher-meeting-section h4 {
+    color: #571626;
+    margin-bottom: 14px;
+    font-size: 16px;
+}
+
+.teacher-meeting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-meeting-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    border: 1px solid #d8c8bc;
+    border-radius: 9px;
+    font: inherit;
+}
+
+.teacher-meeting-form button {
+    background: #571626;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.teacher-meeting-form button:hover {
+    background: #781d39;
+}
+
+.teacher-meeting-link {
+    display: inline-block;
+    margin-top: 14px;
+    color: #571626;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+
+/* M&V ELITE CLUB — JOIN LESSON */
+
+.student-join-lesson {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    margin-top: 18px;
+    padding: 14px 20px;
+
+    background: #571626;
+    color: #ffffff;
+
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: background 0.2s ease;
+}
+
+.student-join-lesson:hover {
+    background: #781d39;
+    color: #ffffff;
+}
+
+
+/* M&V ELITE CLUB — EDIT LESSON */
+
+.teacher-edit-page {
+    min-height: 80vh;
+    background: #f4f1e8;
+    padding: 60px 20px 90px;
+}
+
+.teacher-edit-container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.teacher-edit-back {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #571626;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.teacher-edit-back:hover {
+    text-decoration: underline;
+}
+
+.teacher-edit-card {
+    background: #fffaf5;
+    border: 1px solid #e5d9c8;
+    border-radius: 22px;
+    padding: 40px;
+    box-shadow: 0 12px 36px rgba(87, 22, 38, 0.06);
+}
+
+.teacher-edit-label {
+    color: #956373;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.teacher-edit-card h1 {
+    color: #571626;
+    font-family: Georgia, serif;
+    font-size: 38px;
+    margin: 22px 0 16px;
+}
+
+.teacher-edit-description {
+    color: #263d49;
+    line-height: 1.6;
+    margin-bottom: 26px;
+}
+
+.teacher-edit-info {
+    background: #f2ebe3;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 28px;
+}
+
+.teacher-edit-info strong {
+    color: #571626;
+    font-size: 18px;
+}
+
+.teacher-edit-info p {
+    margin: 8px 0 0;
+}
+
+.teacher-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teacher-edit-form label {
+    color: #571626;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.teacher-edit-form input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #d8c8bc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #263d49;
+    font: inherit;
+}
+
+.teacher-edit-form input:focus {
+    outline: 2px solid #956373;
+    outline-offset: 2px;
+}
+
+.teacher-edit-form button {
+    background: #571626;
+    color: #ffffff;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+}
+
+.teacher-edit-form button:hover {
+    background: #781d39;
+}
+
+.teacher-edit-form .errorlist {
+    color: #a32640;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .teacher-edit-card {
+        padding: 24px;
+    }
+
+    .teacher-edit-card h1 {
+        font-size: 30px;
+    }
+}
+
+
+/* M&V ELITE CLUB — SCHOOL ADMIN */
+
+.school-admin-page {
+    background: #f4f1e8;
+    min-height: 100vh;
+    padding: 50px 20px 90px;
+}
+
+.school-admin-container {
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.school-admin-hero {
+    background: #571626;
+    color: #fffaf5;
+    padding: 48px;
+    border-radius: 22px;
+    margin-bottom: 30px;
+}
+
+.school-admin-hero span {
+    color: #d9aeb9;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+
+.school-admin-hero h1 {
+    color: #fffaf5;
+    font-family: Georgia, serif;
+    font-size: 40px;
+    margin: 16px 0;
+}
+
+.school-admin-hero p {
+    color: #f2dfe3;
+}
+
+.school-admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.school-admin-stat {
+    padding: 25px;
+    background: #fffaf5;
+    border: 1px solid #e5d9c8;
+    border-radius: 16px;
+}
+
+.school-admin-stat span {
+    color: #956373;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.school-admin-stat h3 {
+    color: #571626;
+    margin: 12px 0;
+}
+
+.school-admin-stat strong {
+    color: #571626;
+    font-size: 34px;
+}
+
+.school-admin-section {
+    background: #fffaf5;
+    padding: 30px;
+    border: 1px solid #e5d9c8;
+    border-radius: 18px;
+    margin-bottom: 25px;
+}
+
+.school-admin-section h2 {
+    color: #571626;
+    font-family: Georgia, serif;
+    font-size: 27px;
+    margin-bottom: 24px;
+}
+
+.school-admin-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.school-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.school-admin-table th {
+    background: #f2ebe3;
+    color: #571626;
+    padding: 15px;
+    font-weight: 700;
+}
+
+.school-admin-table td {
+    padding: 15px;
+    border-bottom: 1px solid #e9ded4;
+    color: #263d49;
+}
+
+.school-admin-table tbody tr:hover {
+    background: #fbf4ed;
+}
+
+@media (max-width: 900px) {
+    .school-admin-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .school-admin-hero {
+        padding: 28px;
+    }
+
+    .school-admin-hero h1 {
+        font-size: 30px;
+    }
+
+    .school-admin-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .school-admin-section {
+        padding: 18px;
+    }
+}
+
+
+/* M&V ELITE CLUB — ADMIN ENROLLMENT ACTIONS */
+
+.admin-status-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-status-form select {
+    min-width: 140px;
+    padding: 10px;
+    border: 1px solid #d8c8bc;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #571626;
+    font: inherit;
+}
+
+.admin-status-form button {
+    padding: 11px 16px;
+    background: #571626;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-status-form button:hover {
+    background: #781d39;
+}
+
+
+/* ADMIN SUCCESS NOTIFICATIONS */
+
+.school-admin-notifications {
+    margin-bottom: 24px;
+}
+
+.school-admin-notification {
+    background: #f3e9e4;
+    color: #571626;
+    border: 1px solid #d8b9b0;
+    border-left: 4px solid #571626;
+    border-radius: 12px;
+    padding: 18px 22px;
+    font-weight: 600;
+}
+
+
+/* ADMIN — TEACHER ASSIGNMENT */
+
+.school-admin-table .admin-teacher-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.school-admin-table .admin-teacher-form select {
+    min-width: 170px;
+    padding: 12px;
+    border: 1px solid #d8c8bc;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #571626;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.school-admin-table .admin-teacher-form button {
+    padding: 12px 18px;
+    background: #571626;
+    color: #ffffff;
+    border: 1px solid #571626;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.school-admin-table .admin-teacher-form button:hover {
+    background: #781d39;
+}

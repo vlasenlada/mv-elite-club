@@ -156,9 +156,25 @@
                             <h3>{{ lesson.enrollment.course.title }}</h3>
                             <p><strong>Дата:</strong> {{ lesson.starts_at|date:"d.m.Y" }}</p>
                             <p><strong>Час:</strong> {{ lesson.starts_at|time:"H:i" }} – {{ lesson.ends_at|time:"H:i" }}</p>
-                            <p><strong>Статус:</strong> {{ lesson.get_status_display }}</p>
-                        </div>
-                    {% endfor %}
+                           
+<p><strong>Статус:</strong> {{ lesson.get_status_display }}</p>
+
+{% if lesson.meeting_url and lesson.status == "scheduled" %}
+
+    <a
+        href="{{ lesson.meeting_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="student-join-lesson"
+    >
+        ▶ Приєднатися до заняття
+    </a>
+
+{% endif %}
+
+</div>
+{% endfor %}
+
                 {% else %}
                     <div class="dashboard-empty">
                         <p>Поки що занять у розкладі немає.</p>
@@ -214,6 +230,13 @@
            class="homework-submit-button homework-open-link">
             Переглянути результат →
         </a>
+
+{% elif assignment.id in submitted_assignment_ids %}
+
+    <div class="homework-pending">
+        <span class="homework-pending-icon">◷</span>
+        На перевірці
+    </div>
 
     {% else %}
 

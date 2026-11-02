@@ -42,6 +42,13 @@
     </a>
 {% endif %}
 
+{% if user.role == "teacher" and not user.is_staff %}
+    <a href="{% url 'teacher_dashboard' %}" class="header-button">
+        Кабінет викладача
+    </a>
+{% endif %}
+
+
 
         {% if user.is_staff %}
             <a href="/admin/" class="header-button">
