@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import User
+from .teacher_assignment import TEACHER_ERROR, eligible_teachers
 
 
 class StudentRegistrationForm(UserCreationForm):
@@ -37,3 +38,18 @@ class StudentRegistrationForm(UserCreationForm):
             user.save()
 
         return user
+
+
+class TeacherChoiceForm(forms.Form):
+    teacher_id = forms.ModelChoiceField(
+        queryset=User.objects.none(),
+        label="Викладач",
+        error_messages={
+            "required": "Оберіть викладача.",
+            "invalid_choice": TEACHER_ERROR,
+        },
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["teacher_id"].queryset = eligible_teachers()

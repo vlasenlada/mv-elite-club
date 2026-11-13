@@ -50,11 +50,16 @@
 
 
 
-        {% if user.is_staff %}
-            <a href="/admin/" class="header-button">
-                Адмінпанель
-            </a>
-        {% endif %}
+       
+{% if user.is_staff %}
+    {% if user.role == "admin" or user.is_superuser %}
+        <a href="{% url 'school_admin_dashboard' %}"
+           class="header-button">
+            Кабінет адміністратора
+        </a>
+    {% endif %}
+{% endif %}
+
 
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}

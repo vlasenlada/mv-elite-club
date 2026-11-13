@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views
 from .views import (
     register,
     student_dashboard,
+    join_lesson,
     teacher_dashboard,
     review_submission,
     update_lesson_status,
@@ -42,6 +43,7 @@ urlpatterns = [
     ),
     
     path("dashboard/", student_dashboard, name="student_dashboard"),
+    path("lessons/<int:lesson_id>/join/", join_lesson, name="join_lesson"),
     
     path(
         "teacher/dashboard/",

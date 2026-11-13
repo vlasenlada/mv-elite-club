@@ -48,6 +48,8 @@ class TeacherLessonForm(forms.ModelForm):
         enrollments = Enrollment.objects.none()
 
         if teacher is not None:
+            # ModelForm validates the model before the view calls save().
+            self.instance.teacher = teacher
             enrollments = Enrollment.objects.filter(
                 teacher=teacher,
                 status=Enrollment.Status.APPROVED

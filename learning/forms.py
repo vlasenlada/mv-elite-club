@@ -1,4 +1,5 @@
 from django import forms
+from enrollments.models import Enrollment
 from scheduling.models import Lesson
 from .models import Submission, Assignment
 
@@ -82,7 +83,8 @@ class TeacherAssignmentForm(forms.ModelForm):
         if teacher is not None:
             self.fields["lesson"].queryset = (
                 Lesson.objects.filter(
-                    teacher=teacher
+                    teacher=teacher,
+                    enrollment__status=Enrollment.Status.APPROVED,
                 )
                 .select_related(
                     "enrollment__student",

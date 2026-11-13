@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from .models import Lesson
 from enrollments.models import Enrollment
+from users.teacher_assignment import eligible_teachers
 
 
 @admin.register(Lesson)
@@ -31,6 +32,8 @@ class LessonAdmin(admin.ModelAdmin):
     )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "teacher":
+            kwargs["queryset"] = eligible_teachers()
         if db_field.name == "enrollment":
             kwargs["queryset"] = Enrollment.objects.filter(
                 status=Enrollment.Status.APPROVED

@@ -1,13 +1,15 @@
 
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 
-from .forms import StudentRegistrationForm
+from .forms import StudentRegistrationForm, TeacherChoiceForm
 
 from django.contrib.auth.decorators import login_required
 from .models import User
 
 from enrollments.models import Enrollment
+from enrollments.services import replace_lesson_teacher, transfer_enrollment_teacher
 
 from scheduling.models import Lesson
 
@@ -30,7 +32,8 @@ from learning.models import Assignment, Submission
 from django.db.models import F
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
-from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST, require_safe
 
 from learning.forms import TeacherReviewForm, TeacherAssignmentForm
 
@@ -85,7 +88,8 @@ def student_dashboard(request):
 
     next_lesson = lessons.filter(
         starts_at__gte=timezone.now(),
-        status="scheduled"
+        status="scheduled",
+        enrollment__status=Enrollment.Status.APPROVED,
     ).first()
 
 
@@ -133,6 +137,26 @@ def student_dashboard(request):
     )
 
 
+
+
+@login_required
+@never_cache
+@require_safe
+def join_lesson(request, lesson_id):
+    if (
+        request.user.role != User.Role.STUDENT
+        or request.user.is_staff
+    ):
+        return HttpResponseForbidden("Підключення до заняття доступне лише учням.")
+
+    lesson = get_object_or_404(
+        Lesson.objects.exclude(meeting_url=""),
+        pk=lesson_id,
+        enrollment__student=request.user,
+        enrollment__status=Enrollment.Status.APPROVED,
+        status=Lesson.Status.SCHEDULED,
+    )
+    return redirect(lesson.meeting_url)
 
 
 @login_required
@@ -230,12 +254,17 @@ def teacher_dashboard(request):
         ).order_by("starts_at")
     )
 
-    # Формуємо список учнів та їхніх курсів
+   
+    # Учні, яких адміністрація закріпила за викладачем
+    assigned_enrollments = Enrollment.objects.filter(
+        teacher=request.user,
+        status=Enrollment.Status.APPROVED
+    ).select_related("student", "course")
+
     student_entries = []
     seen = set()
 
-    for lesson in teacher_lessons:
-        enrollment = lesson.enrollment
+    for enrollment in assigned_enrollments:
         key = (enrollment.student_id, enrollment.course_id)
 
         if key not in seen:
@@ -244,6 +273,7 @@ def teacher_dashboard(request):
                 "student": enrollment.student,
                 "course": enrollment.course,
             })
+
 
     # Розділяємо майбутні та минулі заняття
     now = timezone.now()
@@ -358,6 +388,12 @@ def update_lesson_status(request, lesson_id):
         )
 
     lesson.status = new_status
+    try:
+        lesson.validate_schedule()
+    except ValidationError as error:
+        for message in error.messages:
+            messages.error(request, message)
+        return redirect("teacher_dashboard")
     lesson.save(update_fields=["status"])
 
     messages.success(
@@ -400,10 +436,14 @@ def update_meeting_link(request, lesson_id):
             "Посилання на заняття успішно збережено!"
         )
     else:
-        messages.error(
-            request,
-            "Не вдалося зберегти посилання. Перевірте URL."
-        )
+        if form.non_field_errors():
+            for error in form.non_field_errors():
+                messages.error(request, error)
+        else:
+            messages.error(
+                request,
+                "Не вдалося зберегти посилання. Перевірте URL."
+            )
 
     return redirect("teacher_dashboard")
 
@@ -587,15 +627,12 @@ def assign_lesson_teacher(request, lesson_id):
         status=Lesson.Status.SCHEDULED
     )
 
-    teacher_id = request.POST.get("teacher_id")
-
-    teacher = get_object_or_404(
-        User,
-        id=teacher_id,
-        role=User.Role.TEACHER,
-        is_active=True,
-        is_staff=False
-    )
+    form = TeacherChoiceForm(request.POST)
+    if not form.is_valid():
+        for error in form.errors["teacher_id"]:
+            messages.error(request, error)
+        return redirect("school_admin_dashboard")
+    teacher = form.cleaned_data["teacher_id"]
 
     # Якщо викладач уже призначений
     if lesson.teacher_id == teacher.id:
@@ -605,23 +642,12 @@ def assign_lesson_teacher(request, lesson_id):
         )
         return redirect("school_admin_dashboard")
 
-    # Не дозволяємо змінювати викладача,
-    # якщо для заняття вже створені завдання
-    has_assignments = Assignment.objects.filter(
-        lesson=lesson
-    ).exists()
-
-    if has_assignments:
-        messages.error(
-            request,
-            "Неможливо змінити викладача: "
-            "для цього заняття вже є домашні завдання."
-        )
+    try:
+        replace_lesson_teacher(lesson.pk, teacher.pk)
+    except ValidationError as error:
+        for message in error.messages:
+            messages.error(request, message)
         return redirect("school_admin_dashboard")
-
-    # Зберігаємо нового викладача
-    lesson.teacher = teacher
-    lesson.save(update_fields=["teacher"])
 
     messages.success(
         request,
@@ -655,16 +681,12 @@ def assign_enrollment_teacher(request, enrollment_id):
         status=Enrollment.Status.APPROVED
     )
 
-    teacher_id = request.POST.get("teacher_id")
-
-    # Перевіряємо, що це активний викладач
-    teacher = get_object_or_404(
-        User,
-        id=teacher_id,
-        role=User.Role.TEACHER,
-        is_active=True,
-        is_staff=False
-    )
+    form = TeacherChoiceForm(request.POST)
+    if not form.is_valid():
+        for error in form.errors["teacher_id"]:
+            messages.error(request, error)
+        return redirect("school_admin_dashboard")
+    teacher = form.cleaned_data["teacher_id"]
 
     # Якщо викладач уже призначений
     if enrollment.teacher_id == teacher.id:
@@ -674,13 +696,17 @@ def assign_enrollment_teacher(request, enrollment_id):
         )
         return redirect("school_admin_dashboard")
 
-    # Зберігаємо призначення на курс
-    enrollment.teacher = teacher
-    enrollment.save(update_fields=["teacher"])
+    try:
+        moved_count = transfer_enrollment_teacher(enrollment.pk, teacher.pk)
+    except ValidationError as error:
+        for message in error.messages:
+            messages.error(request, message)
+        return redirect("school_admin_dashboard")
 
     messages.success(
         request,
-        "Викладача успішно призначено на курс!"
+        f"Викладача успішно призначено на курс. "
+        f"Передано майбутніх занять: {moved_count}. Історію занять збережено."
     )
 
     return redirect("school_admin_dashboard")

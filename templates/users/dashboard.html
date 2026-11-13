@@ -159,10 +159,10 @@
                            
 <p><strong>Статус:</strong> {{ lesson.get_status_display }}</p>
 
-{% if lesson.meeting_url and lesson.status == "scheduled" %}
+{% if lesson.meeting_url and lesson.status == "scheduled" and lesson.enrollment.status == "approved" %}
 
     <a
-        href="{{ lesson.meeting_url }}"
+        href="{% url 'join_lesson' lesson.id %}"
         target="_blank"
         rel="noopener noreferrer"
         class="student-join-lesson"

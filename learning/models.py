@@ -1,7 +1,10 @@
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from enrollments.models import Enrollment
 
 
 class Assignment(models.Model):
@@ -30,6 +33,18 @@ class Assignment(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
+    def clean(self):
+        super().clean()
+        if (
+            self._state.adding
+            and self.lesson_id
+            and self.lesson.enrollment.status != Enrollment.Status.APPROVED
+        ):
+            raise ValidationError(
+                "Нове домашнє завдання можна створити лише для підтвердженої заявки.",
+                code="enrollment_not_approved",
+            )
 
     def __str__(self):
         return self.title
