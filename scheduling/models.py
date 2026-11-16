@@ -1,12 +1,36 @@
 
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
+from django.db.models import Exists, OuterRef, Q
 from django.utils import timezone
 
 from enrollments.models import Enrollment
 from django.conf import settings
 
+class LessonQuerySet(models.QuerySet):
+    def active_learning(self):
+        return self.filter(Q(enrollment__status="approved") | Q(group__is_active=True))
+
+    def for_student(self, student, *, current=False):
+        from classrooms.models import GroupMembership
+        student_id = getattr(student, "pk", student)
+        members = GroupMembership.objects.filter(
+            group_id=OuterRef("group_id"), enrollment__student_id=student_id,
+            joined_at__lte=OuterRef("starts_at"),
+        ).filter(Q(left_at__isnull=True) | Q(left_at__gt=OuterRef("starts_at")))
+        individual = Q(enrollment__student_id=student_id)
+        if current:
+            members = members.filter(is_active=True, enrollment__status="approved", group__is_active=True)
+            individual &= Q(enrollment__status="approved")
+        return self.annotate(_student_group_access=Exists(members)).filter(individual | Q(_student_group_access=True))
+
+
 class Lesson(models.Model):
+    objects = LessonQuerySet.as_manager()
+    group = models.ForeignKey(
+        "classrooms.StudyGroup", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="lessons", verbose_name="Навчальна група",
+    )
 
     class Status(models.TextChoices):
         SCHEDULED = "scheduled", "Заплановане"
@@ -15,6 +39,8 @@ class Lesson(models.Model):
 
     enrollment = models.ForeignKey(
         Enrollment,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="lessons",
         verbose_name="Запис учня на курс"
@@ -54,9 +80,30 @@ class Lesson(models.Model):
         verbose_name = "Заняття"
         verbose_name_plural = "Заняття"
         ordering = ["starts_at"]
+        constraints = [models.CheckConstraint(
+            condition=(Q(enrollment__isnull=False, group__isnull=True) | Q(enrollment__isnull=True, group__isnull=False)),
+            name="lesson_individual_or_group",
+        )]
 
     def clean(self):
         super().clean()
+
+        if bool(self.enrollment_id) == bool(self.group_id):
+            raise ValidationError("Оберіть або індивідуальну заявку, або навчальну групу.")
+        if self.group_id:
+            if not self.group.is_active:
+                raise ValidationError("Створення та редагування занять архівної групи недоступні.")
+            if self._state.adding and not self.teacher_id:
+                self.teacher = self.group.teacher
+        if self._state.adding and self.enrollment_id and not self.enrollment.course.supports_individual:
+            raise ValidationError("Цей курс не підтримує індивідуальні заняття.")
+        if (self._state.adding and self.enrollment_id and self.enrollment.format_is_explicit
+                and self.enrollment.requested_format == "group"):
+            raise ValidationError("Ця заявка обрана для групового навчання. Створіть спільне заняття групи.")
+        if self.pk:
+            previous = Lesson.objects.filter(pk=self.pk).first()
+            if previous and (previous.enrollment_id, previous.group_id) != (self.enrollment_id, self.group_id):
+                raise ValidationError("Не змінюйте учня, групу або тип існуючого заняття — його навчальна історія має зберігатися.")
 
         if (
             self.starts_at
@@ -109,7 +156,7 @@ class Lesson(models.Model):
                     "Неможливо змінити викладача: для цього заняття вже є домашні завдання."
                 )
 
-    def validate_schedule(self):
+    def validate_schedule(self, *, student_ids=None):
         if (
             self.status == self.Status.CANCELLED
             or not self.starts_at
@@ -132,19 +179,59 @@ class Lesson(models.Model):
                 "Викладач уже має інше заняття в цей час. Оберіть інший час або викладача.",
                 code="teacher_schedule_conflict",
             ))
-        if self.enrollment_id and overlapping.filter(
-            enrollment__student_id=self.enrollment.student_id
-        ).exists():
+        if student_ids is None:
+            student_ids = ([self.enrollment.student_id] if self.enrollment_id else
+                           list(self.memberships_at_start().filter(enrollment__status="approved").values_list("enrollment__student_id", flat=True)))
+        if any(overlapping.for_student(student_id).exists() for student_id in student_ids):
             errors.append(ValidationError(
                 "Учень уже має інше заняття в цей час. Оберіть інший час.",
                 code="student_schedule_conflict",
             ))
+        if self.group_id and overlapping.filter(group_id=self.group_id).exists():
+            errors.append(ValidationError("Група вже має заняття в цей час.", code="group_schedule_conflict"))
         if errors:
             # Non-field errors work in both partial forms and Django Admin.
             raise ValidationError(errors)
 
     def __str__(self):
+        if self.group_id:
+            return f"{self.group.name} — {self.group.course.title}"
         return (
             f"{self.enrollment.student.username} — "
             f"{self.enrollment.course.title}"
         )
+
+    @property
+    def course(self):
+        return self.enrollment.course if self.enrollment_id else self.group.course
+
+    @property
+    def audience_label(self):
+        return self.enrollment.student.username if self.enrollment_id else self.group.name
+
+    @property
+    def is_active_for_learning(self):
+        return self.enrollment.status == "approved" if self.enrollment_id else self.group.is_active
+
+    def memberships_at_start(self):
+        from classrooms.models import GroupMembership
+        return GroupMembership.objects.filter(
+            group_id=self.group_id, joined_at__lte=self.starts_at,
+        ).filter(Q(left_at__isnull=True) | Q(left_at__gt=self.starts_at))
+
+    def has_student(self, student, *, current=False):
+        if self.enrollment_id:
+            return self.enrollment.student_id == student.pk and (not current or self.enrollment.status == "approved")
+        if not self.group_id or (current and not self.group.is_active):
+            return False
+        members = self.memberships_at_start().filter(enrollment__student=student)
+        if current:
+            members = members.filter(is_active=True, enrollment__status="approved")
+        return members.exists()
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.group_id:
+            from classrooms.services import sync_attendance
+            sync_attendance(self)

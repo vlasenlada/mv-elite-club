@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Каталог курсів | M&V Elite Club{% endblock %}
+{% block content %}
+<section class="elite-catalog-hero"><div class="container">
+    <p class="eyebrow">M&V ELITE CLUB / НАПРЯМИ НАВЧАННЯ</p>
+    <h1>Знання для сьогодні.<br><em>Впевненість на завтра.</em></h1>
+    <p>Англійська та математика від перших відкриттів до підготовки до НМТ. Обери свій напрям і формат — індивідуально або в групі.</p>
+</div></section>
+<section class="elite-catalog"><div class="container">
+    <form method="get" class="elite-filters">
+        <label>Предмет<select name="subject"><option value="">Усі предмети</option>{% for value,label in subjects %}<option value="{{ value }}" {% if selected_subject == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+        <label>Класи<select name="grade"><option value="">Усі класи</option>{% for value,label in grades %}<option value="{{ value }}" {% if selected_grade == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+        <button class="btn btn-main" type="submit">Підібрати курс</button><a href="{% url 'course_list' %}" class="elite-text-link">Скинути</a>
+    </form>
+    <div class="elite-course-grid academy-course-grid">{% for course in courses %}{% include "courses/card.html" with catalog_card=True %}{% empty %}<p>За цими параметрами курсів поки немає. Спробуй інші фільтри.</p>{% endfor %}</div>
+    <div class="elite-note"><span>ТВІЙ ФОРМАТ</span><p>Один курс — різні можливості. Персональна увага на індивідуальних заняттях або спільна практика у навчальній групі. Тариф і розклад погоджуємо перед початком навчання.</p></div>
+</div></section>
+{% endblock %}

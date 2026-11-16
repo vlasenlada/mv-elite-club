@@ -2,6 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import Http404
 
 from .forms import SubmissionForm
 from .models import Assignment, Submission
@@ -20,12 +21,12 @@ def submit_homework(request, assignment_id):
     # Знаходимо завдання саме цього учня
     assignment = get_object_or_404(
         Assignment.objects.select_related(
-            "lesson__enrollment__course"
+            "lesson__enrollment__course", "lesson__group__course"
         ),
         pk=assignment_id,
-        lesson__enrollment__student=request.user,
-        lesson__enrollment__status="approved",
     )
+    if not assignment.lesson.has_student(request.user, current=True):
+        raise Http404
 
     # Перевіряємо, чи учень уже надсилав відповідь
     submission = Submission.objects.filter(

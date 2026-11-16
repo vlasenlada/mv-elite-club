@@ -1,0 +1,19 @@
+<svg class="academy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{% if name == 'person' %}
+    <circle cx="12" cy="7" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>
+{% elif name == 'users' %}
+    <circle cx="9" cy="7" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M16 4a3 3 0 0 1 0 6M18 14a6 6 0 0 1 3 5v2"/>
+{% elif name == 'math' %}
+    <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h4M9 6v4M15 8h3M7 15l4 4M11 15l-4 4M15 15h3M15 18h3"/>
+{% elif name == 'check' %}
+    <path d="m5 12 4 4L19 6"/>
+{% elif name == 'clock' %}
+    <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+{% elif name == 'arrow' %}
+    <path d="M5 12h14m-5-5 5 5-5 5"/>
+{% elif name == 'target' %}
+    <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
+{% else %}
+    <path d="M12 5C8 2 4 3 2 4v15c3-2 7-1 10 1m0-15c4-3 8-2 10-1v15c-3-2-7-1-10 1V5Z"/>
+{% endif %}
+</svg>

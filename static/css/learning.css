@@ -1,0 +1,115 @@
+/* Burgundy Elite: course catalog and group learning. */
+.elite-catalog-hero,.elite-detail-hero{background:#560e1b;color:#fffdf8;padding:84px 0 88px}
+.elite-catalog-hero .eyebrow,.elite-detail-hero .eyebrow,.elite-panel-dark .eyebrow{color:#e6d2b8}
+.elite-catalog-hero h1,.elite-detail-hero h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:clamp(34px,4.7vw,66px);line-height:1.16;letter-spacing:-1.4px;margin:22px 0 25px;max-width:920px;overflow-wrap:anywhere}
+.elite-catalog-hero em,.elite-intro em,.elite-enrollment em{font-weight:400;color:#d0bba0}
+.elite-catalog-hero p:last-child,.elite-lead{max-width:660px;font-size:18px;line-height:1.85;color:#f3e9de}
+.elite-catalog{padding:64px 0 88px}
+.elite-filters{display:flex;gap:20px;align-items:end;flex-wrap:wrap;padding:24px;background:#fffdf8;border:1px solid #d0bba077;margin-bottom:38px}
+.elite-filters label{display:grid;gap:9px;flex:1;min-width:180px;font-weight:600;font-size:13px;letter-spacing:.3px;color:#560e1b}
+.elite-filters select,.elite-form select,.elite-form input,.elite-form textarea{width:100%;padding:12px 14px;min-height:45px;font:inherit;border:1px solid #d0bba0;background:#fffdf8;color:#39212a;border-radius:2px;max-width:100%}
+.elite-filters select:focus,.elite-form input:focus,.elite-form select:focus,.elite-form textarea:focus{outline:2px solid #560e1b;outline-offset:2px}
+.elite-course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.elite-course-card{background:#fffdf8;border:1px solid #d0bba080;padding:30px;display:flex;flex-direction:column;min-width:0;transition:transform .2s,border-color .2s}
+.elite-course-card:hover{transform:translateY(-4px);border-color:#560e1b}
+.elite-card-top{display:flex;justify-content:space-between;gap:12px;color:#7c4d57;text-transform:uppercase;font-size:10px;letter-spacing:1px;font-weight:700}
+.elite-course-card h3{font:500 27px/1.35 'Playfair Display',Georgia,serif;color:#560e1b;margin:28px 0 18px;overflow-wrap:anywhere}
+.elite-course-card h3 a{color:inherit}
+.elite-course-card>p{font-size:15px;color:#6b6060;line-height:1.85;margin-bottom:25px}
+.elite-card-meta{margin-top:auto;padding:20px 0;border-top:1px solid #d0bba080;display:grid;gap:8px;font-size:12px;color:#6b4d53}
+.elite-text-link{display:inline-block;color:#560e1b;font-weight:600;font-size:14px;margin-top:16px;border-bottom:1px solid #d0bba0;padding-bottom:4px}
+.elite-course-card .elite-text-link{display:flex;justify-content:space-between}
+.elite-note{display:grid;grid-template-columns:190px 1fr;gap:28px;padding:32px 0;margin-top:45px;border-top:1px solid #d0bba0}
+.elite-note>span,.elite-section-title>span{color:#88505b;font-size:11px;letter-spacing:1.8px;font-weight:700}
+.elite-note p{max-width:760px;color:#605257}
+.elite-detail-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:70px;align-items:center}
+.elite-back{display:inline-block;color:#e6d2b8;font-size:13px;margin-bottom:36px}
+.elite-detail-hero .btn{margin-top:28px}
+.elite-detail-aside{border:1px solid #d0bba080;padding:38px;text-align:center;min-width:0}
+.elite-monogram{display:block;font:italic 78px/1.3 'Playfair Display',Georgia,serif;letter-spacing:-5px;color:#e9d7c0}
+.elite-detail-aside>p{font-size:10px;letter-spacing:2px;color:#e3ccba;margin:15px 0 24px}
+.elite-detail-aside>div{border-top:1px solid #d0bba044;padding:20px 0;text-align:left;display:grid;gap:8px}
+.elite-detail-aside>div>span{font-size:10px;letter-spacing:2px;color:#d0bba0}
+.elite-detail-aside strong{font-weight:400;font-size:17px}
+.elite-intro{display:grid;grid-template-columns:1fr 1fr;gap:24px 60px;padding:10px 0 40px}
+.elite-intro .eyebrow{grid-column:1/-1}
+.elite-intro h2,.elite-enrollment h2,.elite-section-title h2,.elite-panel h2{font:500 clamp(27px,3vw,40px)/1.3 'Playfair Display',Georgia,serif;color:#560e1b;margin-bottom:20px}
+.elite-intro p{margin-bottom:14px;color:#65575c;font-size:16px}
+.elite-section-title{margin:50px 0 28px}
+.elite-section-title h2{margin:14px 0 0}
+.elite-program-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.elite-panel{min-width:0;background:#fffdf8;border:1px solid #d0bba077;padding:30px;overflow-wrap:anywhere}
+.elite-panel h3{font:500 22px/1.45 'Playfair Display',Georgia,serif;color:#560e1b;margin:16px 0}
+.elite-panel p{margin-bottom:14px;color:#67575d}
+.elite-number{font:italic 28px 'Playfair Display',Georgia,serif;color:#b08e70}
+.elite-two-columns{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin-top:45px}
+.elite-panel-dark{background:#560e1b;border-color:#560e1b;color:#fffdf8}
+.elite-panel-dark h2{color:#fffdf8}
+.elite-list{list-style:none;padding:0;margin:0}
+.elite-list li{padding:18px 0 18px 23px;border-bottom:1px solid #d0bba055;position:relative;line-height:1.7}
+.elite-list li:before{content:'✦';position:absolute;left:0;color:#b08e70;font-size:12px;top:21px}
+.elite-enrollment{margin-top:65px;padding-top:55px;border-top:1px solid #d0bba0;display:grid;grid-template-columns:1.2fr 1fr;gap:55px;align-items:start;scroll-margin-top:30px}
+.elite-enrollment>div>p{max-width:500px;color:#67575d;line-height:1.8}
+.elite-format-options{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:25px;font-size:14px;line-height:1.85}
+.elite-format-options strong{color:#560e1b}
+.elite-form{display:grid;gap:18px;margin-top:20px}
+.elite-form p,.elite-form label{display:grid;gap:8px;margin:0}
+.elite-form label{font-size:13px;font-weight:600;color:#560e1b}
+.elite-form .errorlist,.elite-form .helptext{font-size:13px}
+.elite-form .errorlist{color:#a11f38;list-style-position:inside}
+.elite-message{background:#efe1d3;border-left:3px solid #560e1b;padding:16px;margin:18px 0;color:#560e1b!important;font-size:14px}
+.elite-group-header{padding:40px 0 24px}
+.elite-group-header h1{font:500 clamp(32px,4vw,50px)/1.3 'Playfair Display',Georgia,serif;color:#560e1b;margin:14px 0}
+.elite-panel summary{cursor:pointer;color:#560e1b;font-weight:600}
+.elite-attendance{padding:20px 0;border-top:1px solid #d0bba077;margin-top:20px}
+@media(max-width:1000px){.elite-course-grid,.elite-program-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.elite-detail-layout{gap:35px}.elite-detail-aside{padding:25px}}
+@media(max-width:700px){.elite-catalog-hero,.elite-detail-hero{padding:45px 0 50px}.elite-catalog{padding:35px 0 50px}.elite-course-grid,.elite-program-grid,.elite-detail-layout,.elite-intro,.elite-two-columns,.elite-enrollment,.elite-note{grid-template-columns:1fr}.elite-detail-layout,.elite-enrollment{gap:28px}.elite-course-card,.elite-panel{padding:24px}.elite-detail-aside{margin-top:10px}.elite-filters{padding:20px}.elite-filters .btn{width:100%}.elite-catalog-hero h1,.elite-detail-hero h1{letter-spacing:-.7px}.elite-format-options{grid-template-columns:1fr}.elite-note{gap:15px}.elite-section-title{margin-top:35px}}
+@media(prefers-reduced-motion:reduce){.elite-course-card{transition:none}.elite-course-card:hover{transform:none}}
+
+/* Existing course palette, now stable per course instead of per filtered position. */
+.academy-course-card[data-tone="cream"]{background:var(--cream)}
+.academy-course-card[data-tone="blue"]{background:var(--blue)}
+.academy-course-card[data-tone="wheat"]{background:var(--wheat)}
+.academy-course-grid{align-items:stretch;grid-auto-rows:1fr}
+.academy-icon{display:inline-block;width:22px;height:22px;flex:0 0 22px;vertical-align:middle}
+.academy-course-card{height:100%;min-height:485px;padding:30px;display:flex;flex-direction:column;border-top:3px solid var(--burgundy)}
+.academy-course-heading{display:flex;gap:14px;align-items:center;min-height:48px;color:var(--burgundy)}
+.academy-course-heading>div{display:grid;gap:4px;font-size:10px;font-weight:600;letter-spacing:1.1px;text-transform:uppercase}
+.academy-course-heading small{font-size:11px;font-weight:400;letter-spacing:.2px;text-transform:none}
+.academy-subject-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid currentColor;border-radius:50%;flex:0 0 42px}
+.academy-course-card .academy-course-title{font-size:26px;line-height:1.35;min-height:4.05em;margin:24px 0 16px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.academy-course-title a{color:var(--burgundy)}
+.academy-course-card .academy-course-summary{font-size:14px;line-height:1.75;min-height:5.25em;margin:0 0 22px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;color:var(--navy)}
+.academy-course-prices{display:grid;gap:14px;border-top:1px solid var(--sand);padding-top:20px;margin-top:auto}
+.academy-course-prices>div{display:flex;gap:11px;align-items:center;font-size:12px;color:var(--burgundy)}
+.academy-course-prices small{display:block;font-size:12px;line-height:1.7;color:var(--navy)}
+.academy-course-card .academy-course-link{display:flex;align-items:center;justify-content:space-between;padding-top:22px;margin-top:22px;border-top:1px solid var(--sand);border-bottom:0;color:var(--burgundy)}
+.academy-format-section{padding-top:25px;scroll-margin-top:24px}
+.academy-format-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;scroll-margin-top:24px}
+.academy-format-card{display:flex;flex-direction:column;min-width:0;padding:38px;background:var(--white);border:1px solid var(--sand);border-top:3px solid var(--burgundy)}
+.academy-format-card.is-selected{outline:2px solid var(--burgundy);outline-offset:4px}
+.academy-format-icon{width:56px;height:56px;display:grid;place-items:center;background:var(--cream);color:var(--burgundy);border-radius:50%;margin-bottom:24px}
+.academy-format-icon .academy-icon{width:28px;height:28px}
+.academy-kicker{color:var(--burgundy);font-size:10px;letter-spacing:1.6px;margin-bottom:13px}
+.academy-format-card h3{font:500 30px/1.3 'Playfair Display',Georgia,serif;color:var(--burgundy);margin:0 0 24px}
+.academy-features{display:grid;gap:17px;list-style:none;margin:0 0 30px;padding:0}
+.academy-features li{display:flex;gap:12px;align-items:start;font-size:14px;color:var(--navy)}
+.academy-features .academy-icon{width:18px;height:18px;flex-basis:18px;color:var(--burgundy)}
+.academy-format-price{margin-top:auto;padding:23px 0;border-top:1px solid var(--sand);display:grid;gap:7px;color:var(--burgundy)}
+.academy-format-price strong{font:500 35px/1.3 'Playfair Display',Georgia,serif}
+.academy-format-price strong.is-unpriced{font-size:25px}
+.academy-format-price small{font:400 16px 'DM Sans',sans-serif}
+.academy-format-price>span{font-size:12px;color:var(--navy)}
+.academy-format-action{margin:0}
+.academy-format-button{display:block;text-align:center;width:100%;border:1px solid var(--burgundy);font:600 13px/1.5 'DM Sans',sans-serif;cursor:pointer;padding:16px 12px}
+.academy-request-status{font-size:13px;line-height:1.8;margin:0 0 15px;color:var(--navy)}
+.academy-enrollment-note{font-size:13px;line-height:1.8;max-width:860px;margin-top:24px;color:var(--navy)}
+.academy-group-capacity{display:flex;align-items:center;gap:12px;padding:18px 22px;background:var(--cream);border:1px solid var(--sand);margin-bottom:24px;color:var(--burgundy)}
+.elite-list li{display:flex;align-items:start;gap:12px;padding-left:0}
+.elite-list li:before{content:none}
+.elite-list .academy-icon{width:18px;height:18px;flex-basis:18px;margin-top:4px}
+@media(max-width:1000px){.academy-course-card{padding:25px}.academy-format-card{padding:30px}.academy-format-card h3{font-size:27px}}
+@media(max-width:700px){.academy-format-grid{grid-template-columns:1fr}.academy-format-card{padding:26px}.academy-course-card{min-height:460px}.academy-group-capacity{align-items:start;flex-wrap:wrap}.academy-format-price strong{font-size:30px}}
+@media(min-width:701px) and (max-width:1000px){.course-grid.academy-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.course-grid.academy-course-grid{grid-template-columns:1fr}}
+.school-admin-hero .elite-text-link{color:var(--cream);border-bottom-color:var(--cream)}

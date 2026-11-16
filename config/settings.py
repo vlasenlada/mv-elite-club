@@ -33,7 +33,13 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "192.168.31.194",
+]
+
 
 
 # Application definition
@@ -51,6 +57,7 @@ INSTALLED_APPS = [
     "enrollments",
     "scheduling",
     "learning",
+    "classrooms",
 ]
 
 MIDDLEWARE = [
@@ -116,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
 
 TIME_ZONE = "Europe/Kyiv"
 

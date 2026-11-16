@@ -18,8 +18,9 @@
 
 
         <div class="school-admin-hero">
-            <span>M&V ELITE CLUB — ADMIN SPACE</span>
+            <span>M&V ELITE CLUB — КАБІНЕТ АДМІНІСТРАТОРА</span>
             <h1>Панель адміністратора</h1>
+            {% if perms.classrooms.view_studygroup %}<p><a class="elite-text-link" href="{% url 'admin:classrooms_studygroup_changelist' %}">Навчальні групи та учасники →</a></p>{% endif %}
             <p>Управління онлайн-школою</p>
         </div>
 
@@ -28,25 +29,25 @@
         <div class="school-admin-stats">
 
             <div class="school-admin-stat">
-                <span>01 / ENROLLMENTS</span>
+                <span>01 / ЗАЯВКИ</span>
                 <h3>Заявки</h3>
                 <strong>{{ enrollments.count }}</strong>
             </div>
 
             <div class="school-admin-stat">
-                <span>02 / STUDENTS</span>
+                <span>02 / УЧНІ</span>
                 <h3>Учні</h3>
                 <strong>{{ students.count }}</strong>
             </div>
 
             <div class="school-admin-stat">
-                <span>03 / TEACHERS</span>
+                <span>03 / ВИКЛАДАЧІ</span>
                 <h3>Викладачі</h3>
                 <strong>{{ teachers.count }}</strong>
             </div>
 
             <div class="school-admin-stat">
-                <span>04 / LESSONS</span>
+                <span>04 / ЗАНЯТТЯ</span>
                 <h3>Заняття</h3>
                 <strong>{{ lessons.count }}</strong>
             </div>
@@ -95,7 +96,7 @@
             </td>
 
             <td>
-                {{ enrollment.course.title }}
+                                    {{ enrollment.course.title }}<br><small>Формат: {{ enrollment.get_requested_format_display }}</small>
             </td>
 
             <td>
@@ -140,7 +141,7 @@
             <!-- ВИКЛАДАЧ НА КУРСІ -->
             <td>
 
-                {% if enrollment.status == "approved" %}
+                {% if enrollment.format_is_explicit and enrollment.requested_format == "group" %}<p>Групове навчання: {% if enrollment.status == "approved" %}{% if perms.classrooms.add_groupmembership %}<a class="elite-text-link" href="{% url 'admin:classrooms_groupmembership_add' %}?enrollment={{ enrollment.pk }}">Додати до групи</a>{% else %}Додавання до групи виконує адміністратор із відповідним дозволом.{% endif %}{% else %}Спочатку підтвердьте заявку.{% endif %}</p>{% elif enrollment.status == "approved" %}
 
                     <form
                         method="post"
@@ -308,10 +309,10 @@
                             {% for lesson in lessons %}
                             <tr>
                                 <td>
-                                    {{ lesson.enrollment.course.title }}
+                                    {{ lesson.course.title }}
                                 </td>
                                 <td>
-                                    {{ lesson.enrollment.student.username }}
+                                    {{ lesson.audience_label }}
                                 </td>
                                 <td>
                                     {% if lesson.teacher %}

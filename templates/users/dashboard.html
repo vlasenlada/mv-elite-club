@@ -9,7 +9,7 @@
             <div class="dashboard-hero-top">
                 <span class="dashboard-hero-label">M&V ELITE CLUB</span>
                 <span class="dashboard-hero-line"></span>
-                <span class="dashboard-hero-sub">STUDENT SPACE</span>
+                <span class="dashboard-hero-sub">КАБІНЕТ УЧНЯ</span>
             </div>
 
             <h1 class="dashboard-hero-title">
@@ -50,7 +50,7 @@
         </p>
 
         <p class="next-lesson-course">
-            {{ next_lesson.enrollment.course.title }}
+            {{ next_lesson.course.title }}
         </p>
 
         <span class="next-lesson-status">
@@ -77,15 +77,16 @@
         <!-- GRID -->
         <section class="dashboard-grid">
 
-            <!-- COURSES -->
+            <!-- КУРСИ -->
             <div class="dashboard-card dashboard-card-light">
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">01</span>
                     <span class="dashboard-card-divider"></span>
-                    <span class="dashboard-card-tag">COURSES</span>
+                    <span class="dashboard-card-tag">КУРСИ</span>
                 </div>
 
                 <h2 class="dashboard-card-title">Мої курси</h2>
+                {% for membership in group_memberships %}<p><a class="dashboard-link" href="{% url 'group_detail' membership.group_id %}">Моя група: {{ membership.group.name }} →</a>{% if not membership.is_active %} · Історія{% endif %}</p>{% endfor %}
                 <p class="dashboard-card-text">
                     Переглядай свої активні курси та переходь до детальної інформації.
                 </p>
@@ -97,7 +98,8 @@
 
                             <p><strong>Предмет:</strong> {{ enrollment.course.get_subject_display }}</p>
                            
-<p><strong>Формат:</strong> {{ enrollment.course.get_lesson_format_display }}</p>
+<p><strong>Обраний формат:</strong> {{ enrollment.get_requested_format_display }}</p>
+{% if not enrollment.format_is_explicit %}<p><small>Історична заявка: початковий формат і навчальні зв’язки збережено.</small></p>{% endif %}
 
                            
 <p class="enrollment-status-row">
@@ -135,14 +137,14 @@
                 {% endif %}
             </div>
 
-            <!-- SCHEDULE -->
+            <!-- РОЗКЛАД -->
             
 <div class="dashboard-card dashboard-card-burgundy-soft" id="my-schedule">
 
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">02</span>
                     <span class="dashboard-card-divider"></span>
-                    <span class="dashboard-card-tag">SCHEDULE</span>
+                    <span class="dashboard-card-tag">РОЗКЛАД</span>
                 </div>
 
                 <h2 class="dashboard-card-title">Мій розклад</h2>
@@ -153,13 +155,13 @@
                 {% if lessons %}
                     {% for lesson in lessons %}
                         <div class="dashboard-inner-card dashboard-inner-card-accent">
-                            <h3>{{ lesson.enrollment.course.title }}</h3>
+                            <h3>{{ lesson.course.title }}</h3>
                             <p><strong>Дата:</strong> {{ lesson.starts_at|date:"d.m.Y" }}</p>
                             <p><strong>Час:</strong> {{ lesson.starts_at|time:"H:i" }} – {{ lesson.ends_at|time:"H:i" }}</p>
                            
 <p><strong>Статус:</strong> {{ lesson.get_status_display }}</p>
 
-{% if lesson.meeting_url and lesson.status == "scheduled" and lesson.enrollment.status == "approved" %}
+{% if lesson.meeting_url and lesson.status == "scheduled" and lesson.id in joinable_lesson_ids %}
 
     <a
         href="{% url 'join_lesson' lesson.id %}"
@@ -182,12 +184,12 @@
                 {% endif %}
             </div>
 
-            <!-- HOMEWORK -->
+            <!-- ДОМАШНІ ЗАВДАННЯ -->
             <div class="dashboard-card dashboard-card-cream">
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">03</span>
                     <span class="dashboard-card-divider"></span>
-                    <span class="dashboard-card-tag">HOMEWORK</span>
+                    <span class="dashboard-card-tag">ДОМАШНІ ЗАВДАННЯ</span>
                 </div>
 
                 <h2 class="dashboard-card-title">Домашні завдання</h2>
@@ -202,7 +204,7 @@
         <div class="dashboard-inner-card homework-item">
 
             <span class="homework-course">
-                {{ assignment.lesson.enrollment.course.title }}
+                {{ assignment.lesson.course.title }}
             </span>
 
             <h3>{{ assignment.title }}</h3>
@@ -222,7 +224,7 @@
         
 
 
-{% if assignment.lesson.enrollment.status == "approved" %}
+{% if assignment.id in active_assignment_ids %}
 
     {% if assignment.id in graded_assignment_ids %}
 
@@ -261,12 +263,12 @@
 
             </div>
 
-            <!-- PROGRESS -->
-            <div class="dashboard-card dashboard-card-light">
+            <!-- РЕЗУЛЬТАТИ -->
+            <div class="dashboard-card dashboard-card-light" id="my-progress">
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">04</span>
                     <span class="dashboard-card-divider"></span>
-                    <span class="dashboard-card-tag">PROGRESS</span>
+                    <span class="dashboard-card-tag">РЕЗУЛЬТАТИ</span>
                 </div>
 
                 <h2 class="dashboard-card-title">Мій прогрес</h2>
@@ -282,7 +284,7 @@
         <div class="progress-result">
 
             <span class="progress-course">
-                {{ result.assignment.lesson.enrollment.course.title }}
+                {{ result.assignment.lesson.course.title }}
             </span>
 
             <h3>{{ result.assignment.title }}</h3>

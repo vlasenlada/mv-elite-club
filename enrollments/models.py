@@ -1,12 +1,17 @@
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 
 from courses.models import Course
 
 
 class Enrollment(models.Model):
+    format_is_explicit = models.BooleanField(default=False, editable=False)
+    requested_format = models.CharField(
+        max_length=20, choices=Course.LessonFormat.choices,
+        default=Course.LessonFormat.INDIVIDUAL, verbose_name="Бажаний формат",
+    )
 
     class Status(models.TextChoices):
         PENDING = "pending", "Очікує підтвердження"
@@ -67,6 +72,19 @@ class Enrollment(models.Model):
         previous = None
         if self.pk:
             previous = Enrollment.objects.filter(pk=self.pk).first()
+        if (previous and (previous.student_id, previous.course_id) != (self.student_id, self.course_id)
+                and (previous.lessons.exists() or previous.group_memberships.exists())):
+            raise ValidationError("Не змінюйте учня або курс заявки, пов'язаної з навчальною історією.")
+        if previous and previous.requested_format != self.requested_format and (previous.lessons.exists() or previous.group_memberships.exists()):
+            raise ValidationError("Не змінюйте формат заявки, яка вже має заняття або історію участі в групі.")
+        if self.format_is_explicit and self.course_id and (previous is None or previous.requested_format != self.requested_format):
+            allowed = {"individual": self.course.supports_individual, "group": self.course.supports_group}
+            if not allowed.get(self.requested_format, False):
+                raise ValidationError("Обраний формат недоступний для цього курсу.")
+        if (self.format_is_explicit and self.requested_format == "group" and self.teacher_id
+                and (previous is None or previous.teacher_id != self.teacher_id
+                     or previous.requested_format != self.requested_format)):
+            raise ValidationError("Для групової заявки призначте викладача навчальній групі, а не індивідуально учню.")
         if previous and previous.teacher_id == self.teacher_id:
             return
         if not self.teacher_id and previous is None:
@@ -84,5 +102,15 @@ class Enrollment(models.Model):
             from .services import plan_teacher_transfer
             plan_teacher_transfer(self)
 
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        previous = Enrollment.objects.filter(pk=self.pk).first() if self.pk else None
+        super().save(*args, **kwargs)
+        if previous and previous.status == self.Status.APPROVED and self.status != self.Status.APPROVED:
+            for member in self.group_memberships.filter(is_active=True):
+                member.is_active = False
+                member.save(update_fields=["is_active"])
+
     def __str__(self):
-        return f"{self.student.username} — {self.course.title}"
+        suffix = " · історична заявка" if not self.format_is_explicit else ""
+        return f"{self.student.username} — {self.course.title} · {self.get_requested_format_display()}{suffix}"

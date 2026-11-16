@@ -1,0 +1,14 @@
+<article class="course-card academy-course-card{% if catalog_card %} elite-course-card{% endif %}" data-course-id="{{ course.pk }}" data-tone="{{ course.card_tone }}">
+    <div class="academy-course-heading">
+        <span class="academy-subject-icon">{% include "components/icon.html" with name=course.subject %}</span>
+        <div><span>{{ course.get_subject_display }}</span><small>{{ course.get_grade_band_display|default:"Власний темп" }}</small></div>
+    </div>
+    <h3 class="academy-course-title"><a href="{{ course.get_absolute_url }}">{{ course.title }}</a></h3>
+    <p class="academy-course-summary">{{ course.tagline|default:course.description|truncatewords:27 }}</p>
+    <div class="academy-course-prices">
+        {% for option in course.learning_options %}
+        <div>{% include "components/icon.html" with name=option.icon %}<span>{% if option.value == 'individual' %}Індивідуально{% else %}У групі{% endif %}<small>{% if option.price != None %}{{ option.price }} грн / заняття{% if option.value == 'group' %} за учня{% endif %}{% else %}Вартість уточнюється{% endif %}</small></span></div>
+        {% endfor %}
+    </div>
+    <a href="{{ course.get_absolute_url }}" class="elite-text-link academy-course-link">Відкрити програму {% include "components/icon.html" with name="arrow" %}</a>
+</article>

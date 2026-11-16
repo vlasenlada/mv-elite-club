@@ -9,6 +9,7 @@
     <title>{% block title %}M&V Elite Club{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/learning.css' %}?v=20261116">
 </head>
 <body>
 
@@ -22,7 +23,7 @@
 
             <nav class="menu">
                 <a href="/">Головна</a>
-                <a href="/#courses">Наші курси</a>
+                <a href="{% url 'course_list' %}">Наші курси</a>
                 <a href="/#about">Про школу</a>
                 <a href="/#contacts">Контакти</a>
             </nav>

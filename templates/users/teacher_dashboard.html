@@ -21,7 +21,7 @@
         <div class="teacher-hero">
 
             <span class="teacher-label">
-                M&V ELITE CLUB — TEACHER SPACE
+                M&V ELITE CLUB — КАБІНЕТ ВИКЛАДАЧА
             </span>
 
             <h1>
@@ -44,10 +44,11 @@
             <div class="teacher-card">
 
                 <span class="teacher-card-number">
-                    01 / STUDENTS
+                    01 / УЧНІ
                 </span>
 
                 <h2>Мої учні</h2>
+                {% for group in teaching_groups %}<p><a class="elite-text-link" href="{% url 'group_detail' group.pk %}">Група {{ group.name }} · журнал і розклад →</a></p>{% endfor %}
 
                 <p>
                     Переглядай учнів, які навчаються
@@ -85,7 +86,7 @@
             <div class="teacher-card">
 
                 <span class="teacher-card-number">
-                    02 / SCHEDULE
+                    02 / РОЗКЛАД
                 </span>
 
                 <h2>Мій розклад</h2>
@@ -158,12 +159,12 @@
                         <div class="teacher-lesson-item">
 
                             <h3>
-                                {{ lesson.enrollment.course.title }}
+                                {{ lesson.course.title }}
                             </h3>
 
                             <p>
                                 <strong>Учень:</strong>
-                                {{ lesson.enrollment.student.username }}
+                                {{ lesson.audience_label }}
                             </p>
 
                             <p>
@@ -180,7 +181,7 @@
 
                             <p>
                                 <strong>Статус:</strong>
-                                {{ lesson.get_status_display }}
+                                {{ lesson.get_status_display }}{% if lesson.group_id %} · <a href="{% url 'group_detail' lesson.group_id %}" class="elite-text-link">Журнал групи →</a>{% endif %}
                             </p>
 
      
@@ -323,12 +324,12 @@
                         <div class="teacher-lesson-item">
 
                             <h3>
-                                {{ lesson.enrollment.course.title }}
+                                {{ lesson.course.title }}
                             </h3>
 
                             <p>
                                 <strong>Учень:</strong>
-                                {{ lesson.enrollment.student.username }}
+                                {{ lesson.audience_label }}
                             </p>
 
                             <p>
@@ -345,7 +346,7 @@
 
                             <p>
                                 <strong>Статус:</strong>
-                                {{ lesson.get_status_display }}
+                                {{ lesson.get_status_display }}{% if lesson.group_id %} · <a href="{% url 'group_detail' lesson.group_id %}" class="elite-text-link">Журнал групи →</a>{% endif %}
                             </p>
 
          
@@ -400,7 +401,7 @@
             <div class="teacher-card">
 
                 <span class="teacher-card-number">
-                    03 / HOMEWORK
+                    03 / ДОМАШНІ ЗАВДАННЯ
                 </span>
 
                 <h2>Домашні завдання</h2>
@@ -465,12 +466,12 @@
 
                 <p>
                     Учень:
-                    {{ assignment.lesson.enrollment.student.username }}
+                    {{ assignment.lesson.audience_label }}
                 </p>
 
                 <p>
                     Курс:
-                    {{ assignment.lesson.enrollment.course.title }}
+                    {{ assignment.lesson.course.title }}
                 </p>
 
                 <p>
@@ -498,7 +499,7 @@
             <div class="teacher-card">
 
                 <span class="teacher-card-number">
-                    04 / REVIEW
+                    04 / ПЕРЕВІРКА
                 </span>
 
                 <h2>Перевірка робіт</h2>
@@ -524,7 +525,7 @@
 
             <p>
                 <strong>Курс:</strong>
-                {{ submission.assignment.lesson.enrollment.course.title }}
+                {{ submission.assignment.lesson.course.title }}
             </p>
 
             <p><strong>Відповідь учня:</strong></p>

@@ -1,5 +1,6 @@
 
 from django import forms
+from django.db.models import Q
 
 from enrollments.models import Enrollment
 from .models import Lesson
@@ -52,8 +53,9 @@ class TeacherLessonForm(forms.ModelForm):
             self.instance.teacher = teacher
             enrollments = Enrollment.objects.filter(
                 teacher=teacher,
-                status=Enrollment.Status.APPROVED
-            )
+                status=Enrollment.Status.APPROVED,
+                course__supports_individual=True,
+            ).filter(Q(format_is_explicit=False) | Q(requested_format="individual"))
 
         self.fields["enrollment"].queryset = (
             enrollments.select_related("student", "course")

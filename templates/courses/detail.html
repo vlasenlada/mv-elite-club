@@ -1,164 +1,27 @@
-
 {% extends "base.html" %}
-
 {% block title %}{{ course.title }} | M&V Elite Club{% endblock %}
-
 {% block content %}
-
-<section class="courses">
-    <div class="container">
-
-        <a href="/#courses" class="course-link">
-            ← Повернутися до курсів
-        </a>
-
-        <div class="section-heading" style="margin-top: 40px;">
-            <div>
-                <p class="eyebrow">
-                    {{ course.get_subject_display }}
-                </p>
-
-                <h2>{{ course.title }}</h2>
-            </div>
+<section class="elite-detail-hero"><div class="container elite-detail-layout">
+    <div><a class="elite-back" href="{% url 'course_list' %}">← Усі курси</a><p class="eyebrow">{{ course.get_subject_display }} / {{ course.get_grade_band_display|default:"ВЛАСНИЙ ТЕМП" }}</p><h1>{{ course.title }}</h1><p class="elite-lead">{{ course.tagline|default:course.description|truncatewords:40 }}</p><a class="btn btn-light" href="#enrollment">Обрати свій формат ↗</a></div>
+    <aside class="elite-detail-aside"><span class="elite-monogram" aria-hidden="true">M&V</span><p>НАВЧАЙСЯ · ЗРОСТАЙ · ДОСЯГАЙ</p><div><span>ФОРМАТ</span><strong>{{ course.format_label }}</strong></div><div><span>ТАРИФИ</span><strong>За одне заняття · окремо для кожного формату</strong></div><p>Твій розвиток — наша увага до деталей.</p></aside>
+</div></section>
+<section class="elite-catalog"><div class="container">
+    <div class="elite-intro"><span class="eyebrow">01 / ПРО КУРС</span><h2>Навчатися з розумінням.<br><em>Зростати з підтримкою.</em></h2><div>{{ course.description|linebreaks }}</div></div>
+    <div class="elite-section-title"><span>02 / ПРОГРАМА НАВЧАННЯ</span><h2>Крок за кроком до впевненості</h2></div>
+    <div class="elite-program-grid">{% for item in course.program_items %}<article class="elite-panel"><span class="elite-number">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span><h3>{{ item }}</h3></article>{% empty %}<article class="elite-panel"><h3>Програма під твій рівень</h3><p>Викладач допоможе визначити цілі та послідовність тем на початку навчання.</p></article>{% endfor %}</div>
+    <div class="elite-two-columns"><section class="elite-panel"><span class="eyebrow">03 / ПЕРЕВАГИ</span><h2>Турбота про твій результат</h2><ul class="elite-list">{% for item in course.benefit_items %}<li>{% include "components/icon.html" with name="check" %}<span>{{ item }}</span></li>{% empty %}<li>{% include "components/icon.html" with name="check" %}<span>Уважний викладач і зрозумілі пояснення.</span></li><li>{% include "components/icon.html" with name="check" %}<span>Домашні завдання з особистим зворотним зв'язком.</span></li><li>{% include "components/icon.html" with name="check" %}<span>Розклад, матеріали та оцінки в особистому кабінеті.</span></li>{% endfor %}</ul></section><section class="elite-panel elite-panel-dark"><span class="eyebrow">04 / РЕЗУЛЬТАТИ</span><h2>Більше, ніж вивчені теми</h2><ul class="elite-list">{% for item in course.outcome_items %}<li>{% include "components/icon.html" with name="check" %}<span>{{ item }}</span></li>{% empty %}<li>{% include "components/icon.html" with name="check" %}<span>Впевненість у власних знаннях.</span></li><li>{% include "components/icon.html" with name="check" %}<span>Практика самостійного розв'язання завдань.</span></li><li>{% include "components/icon.html" with name="check" %}<span>Зрозумілий наступний крок у навчанні.</span></li>{% endfor %}</ul></section></div>
+    <section class="academy-format-section" id="enrollment">
+        <div class="elite-section-title">
+            <span>05 / ФОРМАТИ НАВЧАННЯ</span>
+            <h2>Один курс. Два способи зростати.</h2>
+            <p>Обери комфортний формат. Вартість вказана за одне заняття, а для групи — за одного учня.</p>
         </div>
-
-        <div class="course-card" style="max-width: 900px;">
-
-            <div class="course-number">
-                M&V ELITE CLUB / COURSE DETAILS
-            </div>
-
-            <h3>Про курс</h3>
-
-            <div style="white-space: pre-line;">
-                {{ course.description }}
-            </div>
-
-            <div style="margin-top: 35px;">
-                <h3>Інформація про навчання</h3>
-
-                <p>
-                    <strong>Предмет:</strong>
-                    {{ course.get_subject_display }}
-                </p>
-
-                <p>
-                    <strong>Формат занять:</strong>
-                    {{ course.get_lesson_format_display }}
-                </p>
-
-                <p>
-                    <strong>Ціна за одне заняття:</strong>
-                    {{ course.price }} грн
-                </p>
-            </div>
-
-            <!-- СТАТУС ЗАЯВКИ ТА ЗАПИС НА КУРС -->
-
-            <div style="margin-top: 35px;">
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <p style="margin-bottom: 15px; color: #560E1B;">
-                            {{ message }}
-                        </p>
-                    {% endfor %}
-                {% endif %}
-
-                {% if user.is_authenticated %}
-
-                    {% if user.role == "student" and not user.is_staff %}
-
-                        {% if enrollment %}
-
-                            {% if enrollment.status == "pending" %}
-
-                                <div class="enrollment-notice">
-                                    <h3>Заявку надіслано!</h3>
-                                    <p>
-                                        Твоя заявка очікує підтвердження
-                                        адміністратора школи.
-                                    </p>
-                                </div>
-
-                            {% elif enrollment.status == "approved" %}
-
-                                <div class="enrollment-notice">
-                                    <h3>Ваша заявка підтверджена!</h3>
-                                    <p>
-                                        Вітаємо! Твою заявку
-                                        на навчання підтверджено.
-                                    </p>
-                                </div>
-
-                            {% elif enrollment.status == "rejected" %}
-
-                                <div class="enrollment-notice">
-                                    <h3>Заявку відхилено</h3>
-                                    <p>
-                                        Для уточнення інформації
-                                        звернися до адміністрації школи.
-                                    </p>
-                                </div>
-
-                            {% elif enrollment.status == "cancelled" %}
-
-                                <div class="enrollment-notice">
-                                    <h3>Заявку скасовано</h3>
-                                    <p>
-                                        Для повторного запису звернися
-                                        до адміністрації школи.
-                                    </p>
-                                </div>
-
-                            {% endif %}
-
-                            <a href="{% url 'student_dashboard' %}"
-                               class="btn btn-main"
-                               style="margin-top: 20px;">
-                                Перейти в мій кабінет
-                            </a>
-
-                        {% else %}
-
-                            <form method="post"
-                                  action="{% url 'enroll_course' course.pk %}">
-                                {% csrf_token %}
-
-                                <button type="submit"
-                                        class="btn btn-main"
-                                        style="border: none; cursor: pointer;">
-                                    Подати заявку на курс
-                                </button>
-                            </form>
-
-                        {% endif %}
-
-                    {% else %}
-
-                        <p>Запис на курси доступний учням.</p>
-
-                    {% endif %}
-
-                {% else %}
-
-                    <p style="margin-bottom: 15px;">
-                        Щоб записатися на курс,
-                        спочатку увійди до акаунта.
-                    </p>
-
-                    <a href="{% url 'login' %}?next={{ request.path|urlencode }}"
-                       class="btn btn-main">
-                        Увійти та записатися
-                    </a>
-
-                {% endif %}
-
-            </div>
-
+        {% for message in messages %}<p class="elite-message" role="status">{{ message }}</p>{% endfor %}
+        {% if enrollment %}<p class="elite-message">Заявка на цей курс уже збережена. Обраний формат: {{ enrollment.get_requested_format_display }}. Для зміни формату звернися до адміністрації.</p>{% endif %}
+        <div class="academy-format-grid" id="learning-formats">
+            {% for option in learning_options %}{% include "courses/format_option.html" %}{% endfor %}
         </div>
-
-    </div>
-</section>
-
+        <p class="academy-enrollment-note">{% include "components/icon.html" with name="check" %} Подання заявки не є оплатою. Розклад, тариф і початок навчання погоджуємо перед першим заняттям. Якщо групи ще немає, твоя заявка чекатиме на рішення адміністрації.</p>
+    </section>
+</div></section>
 {% endblock %}

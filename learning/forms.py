@@ -1,5 +1,4 @@
 from django import forms
-from enrollments.models import Enrollment
 from scheduling.models import Lesson
 from .models import Submission, Assignment
 
@@ -82,13 +81,11 @@ class TeacherAssignmentForm(forms.ModelForm):
 
         if teacher is not None:
             self.fields["lesson"].queryset = (
-                Lesson.objects.filter(
-                    teacher=teacher,
-                    enrollment__status=Enrollment.Status.APPROVED,
-                )
+                Lesson.objects.active_learning().filter(teacher=teacher)
                 .select_related(
                     "enrollment__student",
-                    "enrollment__course"
+                    "enrollment__course",
+                    "group__course",
                 )
                 .order_by("starts_at")
             )
@@ -111,7 +108,7 @@ class TeacherAssignmentForm(forms.ModelForm):
             lesson.starts_at
         ).strftime("%d.%m.%Y, %H:%M")
 
-        course = lesson.enrollment.course.title
-        student = lesson.enrollment.student.username
+        course = lesson.course.title
+        student = lesson.audience_label
 
         return f"{course} — {student} — {date}"

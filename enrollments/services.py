@@ -13,6 +13,8 @@ def plan_teacher_transfer(enrollment, *, lock=False):
     from scheduling.models import Lesson
 
     teacher = get_assignment_teacher(enrollment.teacher_id, lock=lock)
+    if enrollment.format_is_explicit and enrollment.requested_format == "group":
+        raise ValidationError("Викладач групового навчання призначається навчальній групі.")
     if enrollment.status != Enrollment.Status.APPROVED:
         raise ValidationError("Призначення викладача можливе лише для підтвердженої заявки.")
 

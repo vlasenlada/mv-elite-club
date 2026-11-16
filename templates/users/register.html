@@ -8,7 +8,7 @@
 <section class="registration-section">
     <div class="registration-container">
 
-        <p class="eyebrow">JOIN M&V ELITE CLUB</p>
+        <p class="eyebrow">ПРИЄДНУЙСЯ ДО M&V ELITE CLUB</p>
 
         <h1>Створи свій акаунт</h1>
 
@@ -18,6 +18,7 @@
 
         <form method="POST" class="registration-form">
             {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
             {% if form.non_field_errors %}
                 <div class="form-errors">
@@ -53,7 +54,7 @@
 
         <p class="registration-footer">
             Уже маєш акаунт?
-            Сторінку входу додамо наступною.
+            <a href="{% url 'login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Увійти</a>
         </p>
 
     </div>

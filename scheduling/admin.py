@@ -11,6 +11,7 @@ class LessonAdmin(admin.ModelAdmin):
 
     list_display = (
         "enrollment",
+        "group",
         "starts_at",
         "ends_at",
         "status",
@@ -34,6 +35,8 @@ class LessonAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "teacher":
             kwargs["queryset"] = eligible_teachers()
+        if db_field.name == "group":
+            kwargs["queryset"] = db_field.related_model.objects.filter(is_active=True)
         if db_field.name == "enrollment":
             kwargs["queryset"] = Enrollment.objects.filter(
                 status=Enrollment.Status.APPROVED

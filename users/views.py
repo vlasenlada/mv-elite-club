@@ -1,5 +1,6 @@
 
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 
@@ -10,6 +11,7 @@ from .models import User
 
 from enrollments.models import Enrollment
 from enrollments.services import replace_lesson_teacher, transfer_enrollment_teacher
+from classrooms.models import GroupMembership
 
 from scheduling.models import Lesson
 
@@ -25,15 +27,16 @@ from scheduling.forms import (
 
 
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from learning.models import Assignment, Submission
 
 
-from django.db.models import F
-from django.http import HttpResponseForbidden
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST, require_safe
+from django.urls import reverse
 
 from learning.forms import TeacherReviewForm, TeacherAssignmentForm
 
@@ -43,24 +46,44 @@ from django.contrib import messages
 
 
 
+def dashboard_route_for(user):
+    if user.is_staff and (user.role == User.Role.ADMIN or user.is_superuser):
+        return "school_admin_dashboard"
+    if not user.is_staff:
+        if user.role == User.Role.TEACHER:
+            return "teacher_dashboard"
+        if user.role == User.Role.STUDENT:
+            return "student_dashboard"
+    return "home"
+
+
+class SchoolLoginView(LoginView):
+    def get_default_redirect_url(self):
+        # LoginView still validates and honours a safe explicit next URL.
+        return reverse(dashboard_route_for(self.request.user))
+
+
 def register(request):
     if request.user.is_authenticated:
-        return redirect("home")
+        return redirect(dashboard_route_for(request.user))
 
+    next_url = request.POST.get("next") or request.GET.get("next", "")
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = ""
     if request.method == "POST":
         form = StudentRegistrationForm(request.POST)
 
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("home")
+            return redirect(next_url or dashboard_route_for(user))
     else:
         form = StudentRegistrationForm()
 
     return render(
         request,
         "users/register.html",
-        {"form": form}
+        {"form": form, "next": next_url}
     )
 
 
@@ -80,31 +103,28 @@ def student_dashboard(request):
         student=request.user
     ).select_related("course")
 
-    lessons = Lesson.objects.filter(
-        enrollment__student=request.user
-    ).select_related(
-        "enrollment__course"
+    lessons = Lesson.objects.for_student(request.user).select_related(
+        "enrollment__course", "group__course"
     ).order_by("starts_at")
 
-    next_lesson = lessons.filter(
+    next_lesson = Lesson.objects.for_student(request.user, current=True).filter(
         starts_at__gte=timezone.now(),
         status="scheduled",
-        enrollment__status=Enrollment.Status.APPROVED,
     ).first()
 
 
     assignments = Assignment.objects.filter(
-        lesson__enrollment__student=request.user
+        lesson__in=lessons
     ).select_related(
-        "lesson__enrollment__course"
+        "lesson__enrollment__course", "lesson__group__course"
     ).order_by("due_at", "-created_at")
 
 
-    graded_submissions = Submission.objects.filter(
+    graded_submissions = Submission.objects.with_participant_history().filter(
         student=request.user,
-        grade__isnull=False
+        grade__isnull=False,
     ).select_related(
-        "assignment__lesson__enrollment__course"
+        "assignment__lesson__enrollment__course", "assignment__lesson__group__course"
     ).order_by("-submitted_at")
 
 
@@ -116,7 +136,7 @@ def student_dashboard(request):
     submitted_assignment_ids = set(
         Submission.objects.filter(
             student=request.user,
-            assignment__lesson__enrollment__student=request.user
+            assignment__lesson__in=lessons
         ).values_list("assignment_id", flat=True)
     )
 
@@ -132,6 +152,9 @@ def student_dashboard(request):
             "graded_submissions": graded_submissions,
             "graded_assignment_ids": graded_assignment_ids,
             "submitted_assignment_ids": submitted_assignment_ids,
+            "joinable_lesson_ids": set(Lesson.objects.for_student(request.user, current=True).values_list("pk", flat=True)),
+            "active_assignment_ids": set(Assignment.objects.filter(lesson__in=Lesson.objects.for_student(request.user, current=True)).values_list("pk", flat=True)),
+            "group_memberships": GroupMembership.objects.filter(enrollment__student=request.user).select_related("group__course"),
 
         }
     )
@@ -152,10 +175,10 @@ def join_lesson(request, lesson_id):
     lesson = get_object_or_404(
         Lesson.objects.exclude(meeting_url=""),
         pk=lesson_id,
-        enrollment__student=request.user,
-        enrollment__status=Enrollment.Status.APPROVED,
         status=Lesson.Status.SCHEDULED,
     )
+    if not lesson.has_student(request.user, current=True):
+        raise Http404
     return redirect(lesson.meeting_url)
 
 
@@ -239,7 +262,7 @@ def teacher_dashboard(request):
         )
         .select_related(
             "lesson__enrollment__student",
-            "lesson__enrollment__course"
+            "lesson__enrollment__course", "lesson__group__course"
         )
         .order_by("-created_at")
     )
@@ -250,7 +273,7 @@ def teacher_dashboard(request):
             teacher=request.user
         ).select_related(
             "enrollment__student",
-            "enrollment__course"
+            "enrollment__course", "group__course"
         ).order_by("starts_at")
     )
 
@@ -291,15 +314,12 @@ def teacher_dashboard(request):
 
     # Домашні роботи учнів цього викладача
     teacher_submissions = (
-        Submission.objects.filter(
+        Submission.objects.with_participant_history().filter(
             assignment__lesson__teacher=request.user,
-            student=F(
-                "assignment__lesson__enrollment__student"
-            )
         )
         .select_related(
             "student",
-            "assignment__lesson__enrollment__course"
+            "assignment__lesson__enrollment__course", "assignment__lesson__group__course"
         )
         .order_by("-submitted_at")
     )
@@ -315,6 +335,7 @@ def teacher_dashboard(request):
             "assignment_form": assignment_form,
             "teacher_assignments": teacher_assignments,
             "lesson_form": lesson_form,
+            "teaching_groups": request.user.study_groups.filter(is_active=True).select_related("course"),
 
         }
     )
@@ -335,10 +356,9 @@ def review_submission(request, submission_id):
         Submission,
         pk=submission_id,
         assignment__lesson__teacher=request.user,
-        student=F(
-            "assignment__lesson__enrollment__student"
-        )
     )
+    if not submission.has_participant_history():
+        raise Http404
 
     form = TeacherReviewForm(request.POST)
 
@@ -349,6 +369,11 @@ def review_submission(request, submission_id):
         submission.save(
             update_fields=["grade", "feedback"]
         )
+
+        messages.success(request, "Оцінку та коментар збережено.")
+    else:
+        errors = "; ".join(str(error) for field_errors in form.errors.values() for error in field_errors)
+        messages.error(request, "Не вдалося зберегти оцінку. " + errors)
 
     return redirect("teacher_dashboard")
 
@@ -539,7 +564,7 @@ def school_admin_dashboard(request):
         .select_related(
             "teacher",
             "enrollment__student",
-            "enrollment__course"
+            "enrollment__course", "group__course"
         )
         .order_by("-starts_at")
     )

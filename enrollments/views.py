@@ -29,11 +29,22 @@ def enroll_course(request, pk):
         is_published=True
     )
 
+    requested_format = request.POST.get("requested_format", Course.LessonFormat.INDIVIDUAL)
+    supported = {
+        Course.LessonFormat.INDIVIDUAL: course.supports_individual,
+        Course.LessonFormat.GROUP: course.supports_group,
+    }
+    if not supported.get(requested_format, False):
+        messages.error(request, "Оберіть доступний формат навчання.")
+        return redirect(course.get_absolute_url())
+
     enrollment, created = Enrollment.objects.get_or_create(
         student=request.user,
         course=course,
         defaults={
-            "status": Enrollment.Status.PENDING
+            "status": Enrollment.Status.PENDING,
+            "requested_format": requested_format,
+            "format_is_explicit": True,
         }
     )
 
@@ -43,9 +54,7 @@ def enroll_course(request, pk):
             "Заявку успішно надіслано!"
         )
     else:
-        messages.info(
-            request,
-            "Ти вже маєш заявку на цей курс."
-        )
+        messages.info(request, f"Заявка на цей курс уже існує. Обраний формат: {enrollment.get_requested_format_display()}. "
+                      "Нову заявку не створено; для зміни формату звернися до адміністрації.")
 
     return redirect("course_detail", pk=pk)
