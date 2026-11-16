@@ -76,6 +76,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            from .account_security import request_email_confirmation
+            request_email_confirmation(user, user.email, request)
             return redirect(next_url or dashboard_route_for(user))
     else:
         form = StudentRegistrationForm()
@@ -101,7 +103,7 @@ def student_dashboard(request):
 
     enrollments = Enrollment.objects.filter(
         student=request.user
-    ).select_related("course")
+    ).select_related("course", "selected_package", "package_account")
 
     lessons = Lesson.objects.for_student(request.user).select_related(
         "enrollment__course", "group__course"
@@ -152,6 +154,9 @@ def student_dashboard(request):
             "graded_submissions": graded_submissions,
             "graded_assignment_ids": graded_assignment_ids,
             "submitted_assignment_ids": submitted_assignment_ids,
+            "active_course_count": enrollments.filter(status="approved").count(),
+            "upcoming_count": Lesson.objects.for_student(request.user, current=True).filter(status="scheduled", starts_at__gte=timezone.now()).count(),
+            "pending_homework_count": assignments.filter(lesson__in=Lesson.objects.for_student(request.user, current=True).exclude(status="cancelled")).exclude(pk__in=submitted_assignment_ids).count(),
             "joinable_lesson_ids": set(Lesson.objects.for_student(request.user, current=True).values_list("pk", flat=True)),
             "active_assignment_ids": set(Assignment.objects.filter(lesson__in=Lesson.objects.for_student(request.user, current=True)).values_list("pk", flat=True)),
             "group_memberships": GroupMembership.objects.filter(enrollment__student=request.user).select_related("group__course"),

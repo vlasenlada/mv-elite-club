@@ -42,6 +42,9 @@ def course_detail(request, pk=None, slug=None):
     for option in options:
         option["selected"] = option["value"] == selected_format
         option["return_url"] = f"{course.get_absolute_url()}?format={option['value']}#learning-formats"
+        for package in option["packages"]:
+            package.return_url = f"{course.get_absolute_url()}?format={option['value']}&package={package.pk}#package-{package.pk}"
+            package.selected = request.GET.get("package") == str(package.pk)
 
     return render(
         request,

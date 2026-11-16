@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Деталі заняття — M&V Elite Club{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+{% if is_teacher %}<link rel="stylesheet" href="{% static 'css/teacher-space.css' %}">{% endif %}
+<section class="school-calendar cal-detail{% if is_teacher %} teacher-calendar{% endif %}">
+    <a class="cal-back" href="{% url 'lesson_calendar' %}?date={{ card.start|date:'Y-m-d' }}">← {% if is_teacher %}Розклад занять{% else %}До розкладу{% endif %}</a>
+    {% if is_teacher %}{% include 'scheduling/teacher_navigation.html' with calendar_active=True %}{% endif %}
+    <p class="cal-kicker">{% if is_teacher %}TEACHER SPACE · КАБІНЕТ ВИКЛАДАЧА{% else %}МОЄ НАВЧАННЯ{% endif %}</p><h1>{{ lesson.course.title }}</h1>
+    {% include 'scheduling/card.html' %}<p>Час — Київ (Europe/Kyiv).</p>
+    <div class="cal-actions">
+    {% if can_join %}<a class="cal-primary" href="{% url 'join_lesson' lesson.pk %}">Приєднатися до заняття</a>{% elif not is_teacher %}<p>Підключення доступне лише до запланованого заняття з доданим посиланням і чинним доступом.</p>{% endif %}
+    {% if is_teacher %}
+        <a class="cal-primary" href="{% url 'edit_teacher_lesson' lesson.pk %}">Редагувати час і посилання</a>
+        {% if lesson.meeting_url and lesson.status == 'scheduled' %}<a class="cal-secondary" href="{{ lesson.meeting_url }}" rel="noreferrer">Відкрити онлайн-зустріч</a>{% endif %}
+        <form method="post" action="{% url 'update_lesson_status' lesson.pk %}">{% csrf_token %}<label for="lesson-status">Статус</label><select id="lesson-status" name="status">{% for value, label in lesson.Status.choices %}<option value="{{ value }}"{% if value == lesson.status %} selected{% endif %}>{{ label }}</option>{% endfor %}</select><button type="submit">Оновити статус</button></form>
+    {% endif %}
+    </div>
+    {% if is_teacher %}<section class="cal-panel"><h2>{% if lesson.group_id %}Учасники заняття{% else %}Учень{% endif %}</h2>
+        {% if lesson.group_id %}<p>{{ lesson.group.name }}</p><ul>{% for membership in participants %}<li>{{ membership.enrollment.student.get_full_name|default:membership.enrollment.student.username }}</li>{% empty %}<li>Учасників на дату заняття немає.</li>{% endfor %}</ul><a href="{% url 'group_detail' lesson.group_id %}">Група та відвідування →</a>
+        {% else %}<p>{{ lesson.enrollment.student.get_full_name|default:lesson.enrollment.student.username }}</p>{% endif %}
+    </section>{% endif %}
+    <section class="cal-panel"><h2>Домашні завдання</h2><ul>{% for assignment in assignments %}<li>{% if is_teacher %}{{ assignment.title }}{% else %}<a href="{% url 'submit_homework' assignment.pk %}">{{ assignment.title }}</a>{% endif %}{% if assignment.due_at %} · До {{ assignment.due_at|date:'d.m.Y H:i' }}{% endif %}</li>{% empty %}<li>До цього заняття ще немає завдань.</li>{% endfor %}</ul>
+    {% if is_teacher %}<a href="{% url 'teacher_dashboard' %}#teacher-reviews">Домашні завдання та перевірка робіт →</a>{% endif %}</section>
+</section>
+{% endblock %}

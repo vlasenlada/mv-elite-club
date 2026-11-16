@@ -67,6 +67,10 @@ class TariffCompatibilityTests(unittest.TestCase):
             self.assertEqual(Course.objects.using(alias).filter(individual_price__isnull=True, group_price__isnull=True).count(), 7)
             self.assertEqual(new.get_model("enrollments", "Enrollment").objects.using(alias).filter(format_is_explicit=False).count(), 2)
             self.assertIsNone(new.get_model("classrooms", "StudyGroup").objects.using(alias).get(pk=group.pk).capacity)
+            self.assertEqual(new.get_model("courses", "CoursePackage").objects.using(alias).filter(price__isnull=True).count(), 42)
+            self.assertEqual(new.get_model("enrollments", "PackageAccount").objects.using(alias).count(), 0)
+            self.assertEqual(new.get_model("enrollments", "PackageUsage").objects.using(alias).count(), 0)
+            self.assertFalse(new.get_model("users", "User").objects.using(alias).exclude(verified_email=None).exists())
             for index, course_id in enumerate(order):
                 expected = "blue" if index == 1 else "wheat" if index == 2 else "cream"
                 self.assertEqual(Course.objects.using(alias).get(pk=course_id).card_tone, expected)

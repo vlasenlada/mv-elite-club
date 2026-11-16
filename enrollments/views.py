@@ -4,13 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
-from courses.models import Course
+from courses.models import Course, CoursePackage
+from django.db import transaction
 from users.models import User
 from .models import Enrollment
 
 
 @login_required
 @require_POST
+@transaction.atomic
 def enroll_course(request, pk):
 
     if (
@@ -38,6 +40,14 @@ def enroll_course(request, pk):
         messages.error(request, "Оберіть доступний формат навчання.")
         return redirect(course.get_absolute_url())
 
+    package = None
+    package_id = request.POST.get("package_id", "")
+    if package_id:
+        try:
+            package = CoursePackage.objects.get(pk=int(package_id), course=course, learning_format=requested_format, is_active=True)
+        except (ValueError, OverflowError, CoursePackage.DoesNotExist):
+            messages.error(request, "Оберіть доступний пакет для цього курсу та формату.")
+            return redirect(course.get_absolute_url())
     enrollment, created = Enrollment.objects.get_or_create(
         student=request.user,
         course=course,
@@ -45,6 +55,7 @@ def enroll_course(request, pk):
             "status": Enrollment.Status.PENDING,
             "requested_format": requested_format,
             "format_is_explicit": True,
+            "selected_package": package,
         }
     )
 

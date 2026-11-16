@@ -2,12 +2,15 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Exists, F, OuterRef, Q
 
 
 
 class Assignment(models.Model):
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
     lesson = models.ForeignKey(
         "scheduling.Lesson",
         on_delete=models.CASCADE,
@@ -73,6 +76,10 @@ class SubmissionQuerySet(models.QuerySet):
 
 class Submission(models.Model):
     objects = SubmissionQuerySet.as_manager()
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
     assignment = models.ForeignKey(
         Assignment,
         on_delete=models.CASCADE,

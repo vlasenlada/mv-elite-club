@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django import forms
 from django.db import transaction
-from .models import Enrollment
+from .models import Enrollment, PackageAccount, PackageUsage
 from .services import transfer_enrollment_teacher
 from users.teacher_assignment import eligible_teachers
 
@@ -73,3 +73,36 @@ class EnrollmentAdmin(admin.ModelAdmin):
         "student",
         "course",
     )
+
+
+@admin.register(PackageAccount)
+class PackageAccountAdmin(admin.ModelAdmin):
+    list_display = ("enrollment", "lesson_count", "agreed_price", "status", "used_lessons", "remaining_lessons")
+    readonly_fields = ("enrollment", "lesson_count", "used_lessons", "remaining_lessons")
+    list_filter = ("status",)
+
+    @admin.display(description="Використано занять")
+    def used_lessons(self, obj):
+        return obj.used_count
+
+    @admin.display(description="Залишилось занять")
+    def remaining_lessons(self, obj):
+        return obj.remaining_count if obj.remaining_count is not None else "Очікує підтвердження; це не оплата"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(PackageUsage)
+class PackageUsageAdmin(admin.ModelAdmin):
+    list_display = ("account", "lesson", "note", "created_at")
+    readonly_fields = ("created_at",)
+
+    def get_readonly_fields(self, request, obj=None):
+        return ("account", "lesson", "note", "created_at") if obj else self.readonly_fields
+
+    def has_delete_permission(self, request, obj=None):
+        return False

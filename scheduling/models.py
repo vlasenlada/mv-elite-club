@@ -157,6 +157,10 @@ class Lesson(models.Model):
                 )
 
     def validate_schedule(self, *, student_ids=None):
+        if self.pk and self.status == self.Status.COMPLETED:
+            for usage in self.package_usages.select_related("account"):
+                if usage.account.usages.filter(lesson__status="completed").exclude(lesson_id=self.pk).count() >= usage.account.lesson_count:
+                    raise ValidationError("Повернення цього заняття перевищить обсяг пакета. Узгодьте облік з адміністрацією.")
         if (
             self.status == self.Status.CANCELLED
             or not self.starts_at

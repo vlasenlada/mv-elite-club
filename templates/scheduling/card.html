@@ -1,0 +1,8 @@
+<article class="cal-event cal-{{ card.appearance }}{% if card.lesson.group_id %} cal-group{% endif %}">
+    <p class="cal-event-format">{% if card.lesson.group_id %}{% include 'components/icon.html' with name='users' %} Групове{% else %}{% include 'components/icon.html' with name='person' %} Індивідуальне{% endif %}</p>
+    <h4><a href="{% url 'lesson_detail' card.lesson.pk %}">{{ card.lesson.course.title }}</a></h4>
+    <p><time datetime="{{ card.start|date:'c' }}">{{ card.start|date:'d.m.Y · H:i' }}</time> — {% if card.start.date != card.end.date %}{{ card.end|date:'d.m.Y' }} {% endif %}{{ card.end|date:'H:i' }}</p>
+    <p>{{ card.duration }} хв · Викладач: {% if card.lesson.teacher %}{{ card.lesson.teacher.get_full_name|default:card.lesson.teacher.username }}{% else %}Уточнюється{% endif %}</p>
+    <p class="cal-event-status">{% if card.appearance == 'past' %}◷ Час минув · {{ card.lesson.get_status_display }}{% elif card.appearance == 'completed' %}✓ {{ card.lesson.get_status_display }}{% elif card.appearance == 'cancelled' %}× {{ card.lesson.get_status_display }}{% else %}● {{ card.lesson.get_status_display }}{% endif %}</p>
+    <a class="cal-detail-link" href="{% url 'lesson_detail' card.lesson.pk %}">Деталі заняття →</a>
+</article>

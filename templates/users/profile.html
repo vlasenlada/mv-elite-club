@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Профіль | M&V Elite Club{% endblock %}
+{% block content %}<section class="registration-section"><div class="registration-container">
+<p class="eyebrow">МІЙ АКАУНТ</p><h1>Профіль</h1>
+{% for message in messages %}<p class="elite-message" role="status">{{ message }}</p>{% endfor %}
+<p>{{ user.get_full_name|default:user.username }} · {{ user.get_role_display }}</p>
+<p>Логін: {{ user.username }}</p><p>Поточна пошта: {{ user.email|default:"Не вказана" }}</p>
+<p>{% if user.verified_email %}Пошта підтверджена{% else %}Підтвердьте пошту, щоб відновлювати пароль самостійно.{% endif %}</p>
+<a class="elite-text-link" href="{% url 'password_change' %}">Змінити пароль →</a>
+<h2>Підтвердити або змінити пошту</h2><p>До підтвердження нової адреси поточна пошта та доступ залишаються без змін. Відкрийте лист, увійдіть у цей акаунт і підтвердьте адресу протягом 24 годин.</p>
+<form method="post" class="registration-form">{% csrf_token %}{% include "users/account_form_fields.html" %}<button class="btn btn-main">Надіслати підтвердження</button></form>
+<a class="elite-text-link" href="{% url 'home' %}">На головну →</a></div></section>{% endblock %}

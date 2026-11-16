@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "scheduling",
     "learning",
     "classrooms",
+    "notifications.apps.NotificationsConfig",
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.context_processors.notification_badge',
             ],
         },
     },
@@ -153,3 +155,4 @@ AUTH_USER_MODEL = "users.User"
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
+PASSWORD_RESET_TIMEOUT = 3600

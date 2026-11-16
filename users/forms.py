@@ -12,6 +12,13 @@ class StudentRegistrationForm(UserCreationForm):
         label="Електронна пошта"
     )
 
+    def clean_email(self):
+        from .account_security import email_owners, normalize_email
+        email = normalize_email(self.cleaned_data["email"])
+        if email_owners(email).exists():
+            raise forms.ValidationError("Цю адресу неможливо використати. Увійдіть або зверніться до адміністрації.")
+        return email
+
     class Meta:
         model = User
         fields = (

@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Сповіщення | M&V Elite Club{% endblock %}
+{% block content %}<section class="elite-catalog"><div class="container academy-notification-page">
+<a class="elite-text-link" href="{% if user.role == 'teacher' %}{% url 'teacher_dashboard' %}{% else %}{% url 'student_dashboard' %}{% endif %}">← Мій кабінет</a>
+<div class="elite-section-title"><span>M&V ELITE CLUB / МІЙ ПРОСТІР</span><h1>{% include "components/icon.html" with name="bell" %} Сповіщення</h1></div>
+{% if unavailable %}<p class="elite-panel">Сповіщення тимчасово недоступні. Спробуйте пізніше.</p>{% else %}
+<p>Непрочитаних: <strong>{{ unread_notification_count }}</strong></p>
+<div class="academy-notification-list">
+{% for notification in page_obj %}<article class="elite-panel academy-notification-item{% if not notification.read_at %} is-unread{% endif %}">
+<div class="academy-notification-meta"><time datetime="{{ notification.created_at|date:'c' }}">{{ notification.created_at|date:"d.m.Y H:i" }}</time><span>{% if notification.read_at %}Прочитано{% else %}Нове{% endif %}</span></div>
+<h2>{{ notification.title }}</h2><p>{{ notification.text }}</p>
+<div class="academy-notification-actions"><a class="elite-text-link" href="{{ notification.target_url }}">Переглянути →</a>
+{% if not notification.read_at %}<form method="post" action="{% url 'notification_mark_read' notification.pk %}">{% csrf_token %}<button class="btn btn-light">Позначити прочитаним</button></form>{% endif %}</div>
+</article>{% empty %}<div class="elite-panel"><h2>Поки немає сповіщень</h2><p>Тут з'являтимуться важливі оновлення ваших курсів, занять і домашніх робіт.</p></div>{% endfor %}
+</div>
+{% if page_obj.has_other_pages %}<nav class="academy-notification-pagination" aria-label="Сторінки сповіщень">{% if page_obj.has_previous %}<a class="elite-text-link" href="?page={{ page_obj.previous_page_number }}">← Новіші</a>{% endif %}<span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a class="elite-text-link" href="?page={{ page_obj.next_page_number }}">Старіші →</a>{% endif %}</nav>{% endif %}
+{% endif %}</div></section>{% endblock %}

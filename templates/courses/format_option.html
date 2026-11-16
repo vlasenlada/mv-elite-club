@@ -9,6 +9,12 @@
         {% if option.price != None %}<strong>{{ option.price }} <small>грн</small></strong>{% else %}<strong class="is-unpriced">Вартість уточнюється</strong>{% endif %}
         <span>{{ option.unit }}</span>
     </div>
+    {% if option.packages %}<div class="academy-packages" aria-label="Пакети {{ option.title }}">
+    {% for package in option.packages %}<div class="academy-package-summary{% if package.selected %} is-selected{% endif %}" id="package-{{ package.pk }}"><h4>{{ package.lesson_label }}</h4>
+    {% if package.price != None %}<strong>{{ package.price }} грн за пакет{% if option.value == 'group' %} за одного учня{% endif %}</strong><p>≈ {{ package.unit_price }} грн / заняття</p>{% else %}<p>Вартість уточнюється</p>{% endif %}
+    {% if package.saving_amount %}<p class="academy-saving">Вигода {{ package.saving_amount }} грн порівняно з ціною заняття у пакеті на {{ package.compared_to_label }}.</p>{% endif %}
+    {% if not enrollment %}{% if user.is_authenticated and user.role == 'student' and not user.is_staff %}<form method="post" action="{% url 'enroll_course' course.pk %}">{% csrf_token %}<input type="hidden" name="requested_format" value="{{ option.value }}"><input type="hidden" name="package_id" value="{{ package.pk }}"><button class="btn btn-main academy-format-button">Обрати пакет {{ package.lesson_label }}</button></form>{% elif not user.is_authenticated %}<a class="btn btn-main academy-format-button" href="{% url 'login' %}?next={{ package.return_url|urlencode }}">Обрати пакет {{ package.lesson_label }}</a>{% endif %}{% endif %}
+    </div>{% endfor %}</div>{% endif %}
     {% if user.is_authenticated %}
         {% if user.role == 'student' and not user.is_staff %}
             {% if enrollment %}

@@ -1,0 +1,23 @@
+/* Shared navigation within the existing Teacher Space. */
+.teacher-space-nav{display:flex;flex-wrap:wrap;gap:8px;padding:14px;margin:0 0 28px;background:#fffaf5;border:1px solid #e5d9c8;border-radius:16px}
+.teacher-space-nav a,.teacher-calendar-link{display:inline-flex;align-items:center;gap:8px;padding:12px 14px;color:#571626;text-decoration:none;font-family:inherit;border-radius:10px;min-width:0;overflow-wrap:anywhere}
+.teacher-space-nav a{font-size:14px;font-weight:600;line-height:1.5}
+.teacher-space-nav a:hover,.teacher-calendar-link:hover{background:#f3e9e1}
+.teacher-space-nav a[aria-current]{background:#571626;color:#fff8f0}
+.teacher-space-nav svg,.teacher-calendar-link svg{width:19px;height:19px;flex-shrink:0}
+.teacher-calendar-link{margin:4px 0 16px;border:1px solid #e5d9c8;font-size:14px;font-weight:600;line-height:1.5}
+.teacher-space-nav a:focus-visible,.teacher-calendar-link:focus-visible{outline:3px solid #751a35;outline-offset:3px}
+.teacher-container [id]{scroll-margin-top:24px}
+.school-calendar.teacher-calendar{max-width:1290px;padding:60px 20px 100px}
+.teacher-calendar h1,.teacher-calendar h2,.teacher-calendar .cal-event h4{font-family:Georgia,serif;color:#571626}
+.teacher-calendar .cal-heading h1{font-size:clamp(36px,5vw,62px)}
+.teacher-calendar .cal-kicker{color:#956373;font-weight:700;letter-spacing:2px}
+.teacher-calendar .cal-back{display:inline-block;margin-bottom:24px;font-weight:600;text-decoration:none}
+.school-calendar.teacher-calendar.cal-detail{max-width:960px}
+.teacher-calendar .teacher-space-nav{margin-top:0}
+@media(max-width:800px){
+    .teacher-space-nav{padding:10px;gap:6px;margin-bottom:24px}
+    .teacher-space-nav a{flex:1 1 145px;padding:11px 12px;font-size:13px}
+    .school-calendar.teacher-calendar{padding:36px 20px 60px}
+    .teacher-calendar-link{width:100%;justify-content:center;padding:12px;text-align:center}
+}

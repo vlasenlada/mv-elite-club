@@ -1,0 +1,8 @@
+<nav class="teacher-space-nav" aria-label="Навігація кабінету викладача">
+    <a href="{% url 'teacher_dashboard' %}"{% if not calendar_active %} aria-current="page"{% endif %}>Кабінет викладача</a>
+    <a href="{% url 'teacher_dashboard' %}#teacher-students">Мої учні</a>
+    <a href="{% url 'teacher_dashboard' %}#teacher-schedule">Мій розклад</a>
+    <a href="{% url 'lesson_calendar' %}"{% if calendar_active %} aria-current="page"{% endif %}>{% include 'components/icon.html' with name='calendar' %} Розклад занять</a>
+    <a href="{% url 'teacher_dashboard' %}#teacher-homework">Домашні завдання</a>
+    <a href="{% url 'teacher_dashboard' %}#teacher-reviews">Перевірка робіт</a>
+</nav>

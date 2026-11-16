@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if is_teacher %}Розклад занять{% else %}Розклад{% endif %} — M&V Elite Club{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/calendar.css' %}">
+{% if is_teacher %}<link rel="stylesheet" href="{% static 'css/teacher-space.css' %}">{% endif %}
+<section class="school-calendar{% if is_teacher %} teacher-calendar{% endif %}">
+    <a class="cal-back" href="{% if is_teacher %}{% url 'teacher_dashboard' %}{% else %}{% url 'student_dashboard' %}{% endif %}">← {% if is_teacher %}Кабінет викладача{% else %}До кабінету{% endif %}</a>
+    {% if is_teacher %}{% include 'scheduling/teacher_navigation.html' with calendar_active=True %}{% endif %}
+    <header class="cal-heading"><p class="cal-kicker">{% if is_teacher %}TEACHER SPACE · КАБІНЕТ ВИКЛАДАЧА{% else %}МІЙ ПРОСТІР · M&V ELITE CLUB{% endif %}</p><h1>{% include 'components/icon.html' with name='calendar' %} {% if is_teacher %}Розклад занять{% else %}Розклад{% endif %}</h1><p>{% if is_teacher %}Ваші індивідуальні та групові заняття.{% else %}Заняття та навчальні плани в одному місці.{% endif %} Час — Київ (Europe/Kyiv).</p></header>
+    <div class="cal-toolbar">
+        <nav class="cal-switch" aria-label="Вигляд розкладу">
+            <a {% if mode == 'week' %}aria-current="page"{% endif %} href="?view=week&amp;date={{ selected|date:'Y-m-d' }}">Тиждень</a>
+            <a {% if mode == 'month' %}aria-current="page"{% endif %} href="?view=month&amp;date={{ selected|date:'Y-m-d' }}">Місяць</a>
+            <a {% if mode == 'list' %}aria-current="page"{% endif %} href="?view=list&amp;date={{ selected|date:'Y-m-d' }}">Список</a>
+        </nav>
+        <nav class="cal-period" aria-label="Перехід між періодами">
+            <a href="?view={{ mode }}&amp;date={{ previous|date:'Y-m-d' }}" aria-label="Попередній період">←</a>
+            <a href="?view={{ mode }}&amp;date={{ today|date:'Y-m-d' }}">Сьогодні</a>
+            <a href="?view={{ mode }}&amp;date={{ following|date:'Y-m-d' }}" aria-label="Наступний період">→</a>
+        </nav>
+        <form method="get" class="cal-date"><input type="hidden" name="view" value="{{ mode }}"><label for="cal-date">До дати</label><input id="cal-date" name="date" type="date" value="{{ selected|date:'Y-m-d' }}" min="1900-01-01" max="9998-12-31" required><button type="submit">Перейти</button></form>
+    </div>
+    <h2 class="cal-range">{{ start|date:'d.m.Y' }} — {{ last|date:'d.m.Y' }}</h2>
+    <p class="cal-legend"><span>● Заплановане</span><span>✓ Проведене</span><span>× Скасоване</span><span>◷ Час минув</span></p>
+    {% if not cards %}<div class="cal-empty"><h2>На цей період занять немає</h2><p>Оберіть іншу дату або поверніться до поточного тижня.</p></div>{% endif %}
+    {% if mode != 'list' %}<div class="cal-grid cal-{{ mode }}">
+        {% for name in weekdays %}<div class="cal-weekday">{{ name }}</div>{% endfor %}
+        {% for day in days %}<section class="cal-day{% if not day.cards %} cal-day-empty{% endif %}{% if day.outside %} cal-outside{% endif %}{% if day.today %} cal-today{% endif %}" aria-label="{{ day.date|date:'d.m.Y' }}">
+            <h3><time datetime="{{ day.date|date:'Y-m-d' }}">{{ day.date|date:'d.m' }} <span>{{ day.date|date:'l' }}</span></time>{% if day.today %}<small>Сьогодні</small>{% endif %}</h3>
+            {% for card in day.cards %}{% include 'scheduling/card.html' %}{% empty %}<p class="cal-no-lessons">Без занять</p>{% endfor %}
+        </section>{% endfor %}
+    </div>{% endif %}
+    {% if mode == 'list' %}<div class="cal-agenda">{% for card in cards %}{% include 'scheduling/card.html' %}{% endfor %}</div>{% endif %}
+    <p class="cal-note">Список показує вибраний місяць. Зміни дати, часу й статусу з’являються після оновлення сторінки.</p>
+</section>
+{% endblock %}

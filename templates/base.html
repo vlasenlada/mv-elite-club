@@ -9,7 +9,7 @@
     <title>{% block title %}M&V Elite Club{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/learning.css' %}?v=20261116">
+    <link rel="stylesheet" href="{% static 'css/learning.css' %}?v=notifications-20261116-2">
 </head>
 <body>
 
@@ -36,6 +36,10 @@
         <span class="user-greeting">
             Привіт, {{ user.username }}!
         </span>
+        <a class="elite-text-link" href="{% url 'profile' %}">Профіль</a>
+        {% if notifications_available %}<a class="academy-notification-bell" href="{% url 'notification_list' %}" aria-label="Сповіщення: {{ unread_notification_count }} непрочитаних">
+            {% include "components/icon.html" with name="bell" %}{% if unread_notification_count %}<strong class="academy-notification-count">{{ unread_notification_count }}</strong>{% endif %}
+        </a>{% endif %}
         
 {% if user.role == "student" and not user.is_staff %}
     <a href="{% url 'student_dashboard' %}" class="header-button">

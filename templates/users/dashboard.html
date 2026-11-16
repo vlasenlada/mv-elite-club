@@ -3,9 +3,18 @@
 
 <section class="student-dashboard luxury-dashboard">
     <div class="dashboard-container">
+        <div class="academy-student-layout">
+        <nav class="academy-student-nav" aria-label="Навігація кабінету">
+            <p class="academy-kicker">МІЙ ПРОСТІР</p>
+            <a href="#overview">Огляд</a><a href="#my-courses">Мої курси</a>
+            <a href="{% url 'lesson_calendar' %}">Розклад</a><a href="#my-homework">Домашні завдання</a>
+            <a href="#my-payments">Оплати</a><a href="{% url 'profile' %}">Профіль</a>
+            {% if notifications_available %}<a href="{% url 'notification_list' %}">Сповіщення{% if unread_notification_count %} · {{ unread_notification_count }}{% endif %}</a>{% endif %}
+        </nav>
+        <div class="academy-student-content">
 
         <!-- HERO -->
-        <section class="dashboard-hero">
+        <section class="dashboard-hero" id="overview">
             <div class="dashboard-hero-top">
                 <span class="dashboard-hero-label">M&V ELITE CLUB</span>
                 <span class="dashboard-hero-line"></span>
@@ -23,16 +32,21 @@
 
             <div class="dashboard-hero-stats">
                 <div class="hero-stat-card">
-                    <span class="hero-stat-number">{{ enrollments|length }}</span>
+                    <span class="hero-stat-number">{{ active_course_count }}</span>
                     <span class="hero-stat-label">Активні курси</span>
                 </div>
 
                 <div class="hero-stat-card">
-                    <span class="hero-stat-number">{{ lessons|length }}</span>
-                    <span class="hero-stat-label">Заняття у розкладі</span>
+                    <span class="hero-stat-number">{{ upcoming_count }}</span>
+                    <span class="hero-stat-label">Майбутні заняття</span>
                 </div>
+                <div class="hero-stat-card"><span class="hero-stat-number">{{ pending_homework_count }}</span><span class="hero-stat-label">Завдання до виконання</span></div>
             </div>
             
+{% for enrollment in enrollments %}{% if enrollment.selected_package_id %}
+<p class="academy-overview-package">{{ enrollment.course.title }} · {{ enrollment.package_account.lesson_label }}<br>
+{% if enrollment.package_account.remaining_count != None %}Залишилось: {{ enrollment.package_account.remaining_count }} · {{ enrollment.package_account.display_status }}{% else %}Очікує підтвердження адміністрацією · оплата не підтверджена{% endif %}</p>
+{% endif %}{% endfor %}
 <div class="next-lesson-card">
     <span class="next-lesson-label">
         ✦ НАЙБЛИЖЧЕ ЗАНЯТТЯ
@@ -57,7 +71,7 @@
             Заплановане
         </span>
         
-<a href="#my-schedule" class="next-lesson-button">
+<a href="{% url 'lesson_calendar' %}" class="next-lesson-button">
     Переглянути розклад →
 </a>
 
@@ -78,7 +92,7 @@
         <section class="dashboard-grid">
 
             <!-- КУРСИ -->
-            <div class="dashboard-card dashboard-card-light">
+            <div class="dashboard-card dashboard-card-light" id="my-courses">
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">01</span>
                     <span class="dashboard-card-divider"></span>
@@ -99,6 +113,11 @@
                             <p><strong>Предмет:</strong> {{ enrollment.course.get_subject_display }}</p>
                            
 <p><strong>Обраний формат:</strong> {{ enrollment.get_requested_format_display }}</p>
+{% if enrollment.selected_package_id %}
+<div class="academy-package-summary"><strong>Пакет: {{ enrollment.package_account.lesson_label }}</strong>
+<p>{{ enrollment.package_account.display_status }}</p>
+{% if enrollment.package_account.remaining_count != None %}<p>Використано: {{ enrollment.package_account.used_count }} · Залишилось: {{ enrollment.package_account.remaining_count }}</p>{% else %}<p>Залишок з'явиться після підтвердження адміністрацією. Оплата не підтверджена.</p>{% endif %}</div>
+{% else %}<p>Без пакетного обліку · попередні умови збережено.</p>{% endif %}
 {% if not enrollment.format_is_explicit %}<p><small>Історична заявка: початковий формат і навчальні зв’язки збережено.</small></p>{% endif %}
 
                            
@@ -133,6 +152,7 @@
                 {% else %}
                     <div class="dashboard-empty">
                         <p>У тебе ще немає активних курсів.</p>
+                        <a class="dashboard-link" href="{% url 'course_list' %}">Обрати навчання →</a>
                     </div>
                 {% endif %}
             </div>
@@ -185,7 +205,7 @@
             </div>
 
             <!-- ДОМАШНІ ЗАВДАННЯ -->
-            <div class="dashboard-card dashboard-card-cream">
+            <div class="dashboard-card dashboard-card-cream" id="my-homework">
                 <div class="dashboard-card-head">
                     <span class="dashboard-card-index">03</span>
                     <span class="dashboard-card-divider"></span>
@@ -333,6 +353,14 @@
             </div>
 
         </section>
+        <section class="elite-panel" id="my-payments"><h2>Оплати та пакети</h2>
+        <p>Онлайн-оплату не підключено. Заявка й підтвердження навчання не означають оплату.</p>
+        {% for enrollment in enrollments %}{% if enrollment.selected_package_id %}<div class="academy-package-summary"><h3>{{ enrollment.course.title }}</h3>
+        <p>{{ enrollment.get_requested_format_display }} · {{ enrollment.package_account.lesson_label }}</p>
+        <p>Ціна на момент вибору: {% if enrollment.package_account.agreed_price != None %}{{ enrollment.package_account.agreed_price }} грн{% else %}Вартість уточнюється{% endif %}</p>
+        <p>{{ enrollment.package_account.display_status }}</p></div>{% else %}<div class="academy-package-summary"><h3>{{ enrollment.course.title }}</h3><p>{{ enrollment.get_requested_format_display }} · без пакета</p><p>Поточний тариф за одне заняття: {% if enrollment.current_lesson_price != None %}{{ enrollment.current_lesson_price }} грн{% else %}Вартість уточнюється{% endif %}{% if enrollment.requested_format == 'group' %} за одного учня{% endif %}</p></div>{% endif %}{% endfor %}
+        <p>Умови, початок навчання та підтвердження обліку погоджуємо з адміністрацією.</p></section>
+        </div></div>
     </div>
 </section>
 

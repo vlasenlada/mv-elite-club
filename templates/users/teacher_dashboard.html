@@ -1,7 +1,9 @@
 
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/teacher-space.css' %}">
 
 <section class="teacher-dashboard">
     <div class="teacher-container">
@@ -37,11 +39,13 @@
 
         </div>
 
+        {% include 'scheduling/teacher_navigation.html' %}
+
         <!-- ОСНОВНІ РОЗДІЛИ -->
         <div class="teacher-grid">
 
             <!-- 01. МОЇ УЧНІ -->
-            <div class="teacher-card">
+            <div class="teacher-card" id="teacher-students">
 
                 <span class="teacher-card-number">
                     01 / УЧНІ
@@ -83,13 +87,14 @@
 
 
             <!-- 02. МІЙ РОЗКЛАД -->
-            <div class="teacher-card">
+            <div class="teacher-card" id="teacher-schedule">
 
                 <span class="teacher-card-number">
                     02 / РОЗКЛАД
                 </span>
 
                 <h2>Мій розклад</h2>
+                <a class="teacher-calendar-link" href="{% url 'lesson_calendar' %}">{% include 'components/icon.html' with name='calendar' %} Відкрити повний календар →</a>
 
                 <p>
                     Переглядай майбутні заняття
@@ -398,7 +403,7 @@
 
 
             <!-- 03. ДОМАШНІ ЗАВДАННЯ -->
-            <div class="teacher-card">
+            <div class="teacher-card" id="teacher-homework">
 
                 <span class="teacher-card-number">
                     03 / ДОМАШНІ ЗАВДАННЯ
@@ -496,7 +501,7 @@
 
 
             <!-- 04. ПЕРЕВІРКА РОБІТ -->
-            <div class="teacher-card">
+            <div class="teacher-card" id="teacher-reviews">
 
                 <span class="teacher-card-number">
                     04 / ПЕРЕВІРКА

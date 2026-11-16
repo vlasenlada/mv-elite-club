@@ -58,10 +58,11 @@
             </button>
 
         </form>
+        <p><a class="elite-text-link" href="{% url 'password_reset' %}">Забули пароль?</a></p>
 
         <p class="registration-footer">
             Ще немає акаунта?
-            <a href="{% url 'register' %}">
+            <a href="{% url 'register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">
                 Зареєструватися
             </a>
         </p>

@@ -1,10 +1,25 @@
 
 from django.contrib import admin
-from .models import Course
+from .models import Course, CoursePackage
+
+
+@admin.register(CoursePackage)
+class CoursePackageAdmin(admin.ModelAdmin):
+    list_display = ("course", "learning_format", "lesson_count", "price", "is_active")
+    list_filter = ("course", "learning_format", "lesson_count")
+    list_editable = ("price", "is_active")
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        for learning_format in ("individual", "group"):
+            for count in (4, 8, 12):
+                CoursePackage.objects.get_or_create(course=form.instance, learning_format=learning_format, lesson_count=count)
     prepopulated_fields = {"slug": ("title",)}
     list_display = (
         "title",

@@ -3,7 +3,7 @@
 {% block content %}
 <section class="elite-detail-hero"><div class="container elite-detail-layout">
     <div><a class="elite-back" href="{% url 'course_list' %}">← Усі курси</a><p class="eyebrow">{{ course.get_subject_display }} / {{ course.get_grade_band_display|default:"ВЛАСНИЙ ТЕМП" }}</p><h1>{{ course.title }}</h1><p class="elite-lead">{{ course.tagline|default:course.description|truncatewords:40 }}</p><a class="btn btn-light" href="#enrollment">Обрати свій формат ↗</a></div>
-    <aside class="elite-detail-aside"><span class="elite-monogram" aria-hidden="true">M&V</span><p>НАВЧАЙСЯ · ЗРОСТАЙ · ДОСЯГАЙ</p><div><span>ФОРМАТ</span><strong>{{ course.format_label }}</strong></div><div><span>ТАРИФИ</span><strong>За одне заняття · окремо для кожного формату</strong></div><p>Твій розвиток — наша увага до деталей.</p></aside>
+    <aside class="elite-detail-aside"><span class="elite-monogram" aria-hidden="true">M&V</span><p>НАВЧАЙСЯ · ЗРОСТАЙ · ДОСЯГАЙ</p><div><span>ФОРМАТ</span><strong>{{ course.format_label }}</strong></div><div><span>ТАРИФИ</span><strong>Разові заняття та пакети · окремо для кожного формату</strong></div><p>Твій розвиток — наша увага до деталей.</p></aside>
 </div></section>
 <section class="elite-catalog"><div class="container">
     <div class="elite-intro"><span class="eyebrow">01 / ПРО КУРС</span><h2>Навчатися з розумінням.<br><em>Зростати з підтримкою.</em></h2><div>{{ course.description|linebreaks }}</div></div>
@@ -14,7 +14,7 @@
         <div class="elite-section-title">
             <span>05 / ФОРМАТИ НАВЧАННЯ</span>
             <h2>Один курс. Два способи зростати.</h2>
-            <p>Обери комфортний формат. Вартість вказана за одне заняття, а для групи — за одного учня.</p>
+            <p>Обери формат і пакет на 4, 8 або 12 занять. Для пакета вказані загальна вартість та ціна одного заняття. Групові тарифи — за одного учня. Разові заняття доступні окремо.</p>
         </div>
         {% for message in messages %}<p class="elite-message" role="status">{{ message }}</p>{% endfor %}
         {% if enrollment %}<p class="elite-message">Заявка на цей курс уже збережена. Обраний формат: {{ enrollment.get_requested_format_display }}. Для зміни формату звернися до адміністрації.</p>{% endif %}
