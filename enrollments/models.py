@@ -234,3 +234,7 @@ class PackageUsage(models.Model):
         self.account = PackageAccount.objects.select_for_update().get(pk=self.account_id)
         self.full_clean()
         super().save(*args, **kwargs)
+
+
+# Registered with the existing app, separate from regular Enrollment records.
+from .trial_models import TrialGroupAdmission, TrialRequest  # noqa: E402, F401

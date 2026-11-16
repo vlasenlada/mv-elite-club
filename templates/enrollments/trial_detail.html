@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}Пробна заявка — M&V Elite Club{% endblock %}
+{% block content %}<section class="elite-catalog"><div class="container elite-panel">
+<a class="elite-text-link" href="{% if is_teacher %}{% url 'teacher_dashboard' %}{% else %}{% url 'student_dashboard' %}{% endif %}">← До кабінету</a>
+<h1>Заявка на безкоштовне пробне</h1><h2>{{ trial.course.title }}</h2>
+<p>Учень: {{ trial.student_name }} · Клас / рівень: {{ trial.level }}</p><p>Формат: {{ trial.get_requested_format_display }} · Статус: {{ trial.get_status_display }}</p>
+<p>Дата й час узгоджуються адміністрацією окремо. Заявка не є заняттям у календарі.</p>
+{% if not is_teacher %}<p>Контакти вашого звернення: {{ trial.email }} · {{ trial.phone }}</p>{% endif %}
+</div></section>{% endblock %}

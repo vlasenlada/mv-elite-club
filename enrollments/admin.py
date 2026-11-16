@@ -5,6 +5,8 @@ from django.db import transaction
 from .models import Enrollment, PackageAccount, PackageUsage
 from .services import transfer_enrollment_teacher
 from users.teacher_assignment import eligible_teachers
+from .trial_models import TrialRequest
+from .trial_services import trial_storage_ready
 
 
 class EnrollmentAdminForm(forms.ModelForm):
@@ -106,3 +108,26 @@ class PackageUsageAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+@admin.register(TrialRequest)
+class TrialRequestAdmin(admin.ModelAdmin):
+    list_display = ("id", "student_name", "course", "requested_format", "status", "teacher", "created_at")
+    list_filter = ("status", "requested_format", "course")
+    list_select_related = ("course", "teacher")
+    readonly_fields = ("user", "course", "requested_format", "student_name", "level", "is_minor", "guardian_name", "email", "phone", "comment", "consent_at", "guardian_consent_at", "consent_version", "created_at", "updated_at")
+    exclude = ("student_key", "email_key", "phone_key")
+
+    def get_model_perms(self, request):
+        return super().get_model_perms(request) if trial_storage_ready() else {}
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "teacher":
+            kwargs["queryset"] = eligible_teachers()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

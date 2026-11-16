@@ -32,6 +32,11 @@ class Notification(models.Model):
         user = self.recipient
         teacher = user.role == "teacher"
         fallback = reverse("teacher_dashboard" if teacher else "student_dashboard")
+        if self.target_type == "trial":
+            from enrollments.trial_services import accessible_trials, trial_storage_ready
+            if trial_storage_ready() and accessible_trials(user).filter(pk=self.target_id).exists():
+                return reverse("trial_detail", args=[self.target_id])
+            return fallback
         if self.target_type == "lesson":
             from scheduling.selectors import calendar_lessons
             if calendar_lessons(user).filter(pk=self.target_id).exists():

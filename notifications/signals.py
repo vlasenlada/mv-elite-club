@@ -1,7 +1,7 @@
 from django.db.models.signals import pre_save, post_save
 
 from classrooms.models import GroupMembership, StudyGroup
-from enrollments.models import Enrollment
+from enrollments.models import Enrollment, TrialRequest
 from learning.models import Assignment, Submission
 from scheduling.models import Lesson
 
@@ -9,6 +9,7 @@ from .services import canonical, record_change, storage_ready
 
 
 TRACKED = {
+    TrialRequest: ("user_id", "course_id", "status", "teacher_id"),
     Enrollment: ("student_id", "course_id", "status", "teacher_id"),
     Lesson: ("enrollment_id", "group_id", "teacher_id", "starts_at", "ends_at", "status", "meeting_url"),
     Assignment: ("lesson_id", "title", "description", "due_at"),

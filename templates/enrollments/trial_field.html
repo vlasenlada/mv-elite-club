@@ -1,0 +1,9 @@
+<div class="trial-field{% if field.field.widget.input_type == 'checkbox' %} trial-check{% endif %}{% if field.errors %} trial-field-invalid{% endif %}">
+    {% if field.field.widget.input_type == 'checkbox' %}
+        {{ field }}<label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span aria-hidden="true">*</span>{% endif %}</label>
+    {% else %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span aria-hidden="true">*</span>{% endif %}</label>{{ field }}
+    {% endif %}
+    {% if field.help_text %}<p class="trial-help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+    {% if field.errors %}<div class="trial-errors" id="{{ field.auto_id }}_error" role="alert">{{ field.errors }}</div>{% endif %}
+</div>

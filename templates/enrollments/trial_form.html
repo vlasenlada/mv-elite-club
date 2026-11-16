@@ -1,0 +1,29 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Безкоштовне пробне — {{ course.title }}{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/trials.css' %}?v=20261117">
+<script src="{% static 'js/trial-form.js' %}" defer></script>
+<section class="elite-catalog"><div class="container trial-page">
+<a class="elite-text-link" href="{{ course.get_absolute_url }}">← До курсу</a>
+<header class="trial-heading"><p class="trial-eyebrow">Безкоштовне пробне заняття</p><h1>{{ course.title }}</h1><p>Заповни анкету, і ми зв'яжемося з тобою, щоб узгодити зручний час</p></header>
+<details class="trial-about"><summary>Як проходить пробне заняття</summary><div><p><strong>Індивідуальне пробне — безкоштовне знайомство на 20–30 хвилин.</strong> Купувати пакет не потрібно. Адміністрація зв’яжеться з вами, узгодить дату та призначить викладача.</p><p>Групове пробне можливе лише під час формування групи або на початку навчання: після перевірки рівня, стану набору та вільних місць. Подання заявки не додає учня до групи й не створює заняття чи посилання на зустріч.</p><p>Регулярне групове навчання — за пакетами. Разових платних групових пробних немає.</p></div></details>
+<form method="post" class="elite-panel trial-form" data-trial-form action="{% url 'trial_request' course.pk %}">
+{% csrf_token %}
+{% if form.non_field_errors %}<div role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{{ form.website }}
+<div class="trial-row">{% include 'enrollments/trial_field.html' with field=form.student_name %}{% include 'enrollments/trial_field.html' with field=form.level %}</div>
+<div class="trial-row">{% include 'enrollments/trial_field.html' with field=form.email %}{% include 'enrollments/trial_field.html' with field=form.phone %}</div>
+<div class="trial-row">{% include 'enrollments/trial_field.html' with field=form.age_category %}{% include 'enrollments/trial_field.html' with field=form.requested_format %}</div>
+<fieldset class="trial-guardian" data-trial-guardian{% if form.guardian_fields_hidden %} hidden disabled{% endif %}>
+    <legend>Для неповнолітнього учня</legend>
+    {% include 'enrollments/trial_field.html' with field=form.guardian_name %}
+    {% include 'enrollments/trial_field.html' with field=form.guardian_consent %}
+</fieldset>
+{% include 'enrollments/trial_field.html' with field=form.comment %}
+<aside class="trial-privacy"><h2>Як використаємо ваші дані</h2><p>Використаємо контакти лише для розгляду заявки та зв’язку щодо пробного. Для неповнолітнього потрібна згода законного представника.</p>
+<details><summary>Повна інформація про обробку даних</summary><div><p>Вказані ім’я, рівень і контакти потрібні команді M&V Elite Club лише для розгляду заявки, підбору формату та зв’язку щодо пробного. Дані не публікуються й не використовуються для рекламної розсилки. Контактні дані доступні працівникам, уповноваженим обробляти заявки.</p><p>Не вказуйте зайвих або чутливих відомостей. Для неповнолітнього форму заповнює один із батьків або законний представник. Щоб уточнити, виправити чи попросити видалити контактні дані, зверніться до адміністрації школи через наявний канал зв’язку.</p></div></details></aside>
+{% include 'enrollments/trial_field.html' with field=form.privacy_consent %}
+<div class="trial-submit-area"><button class="trial-submit" type="submit" data-trial-submit>Надіслати заявку на пробне заняття</button><p class="trial-help" data-trial-submit-status role="status" aria-live="polite"></p></div>
+<p class="trial-help">* Обов’язкові поля. Ми не створюємо акаунт і не підключаємо оплату. Підтвердження буде на наступній сторінці; автоматичні листи не надсилаються.</p>
+</form></div></section>
+{% endblock %}

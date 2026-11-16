@@ -58,7 +58,12 @@ def emit_events(obj, before, after, key, using):
             target_type=target_type or obj._meta.model_name, target_id=target_id or obj.pk, using=using)
 
     label = obj._meta.label_lower
-    if label == "enrollments.enrollment":
+    if label == "enrollments.trialrequest":
+        if before.get("status") != obj.status and obj.status in {"approved", "rejected", "cancelled", "completed"}:
+            send([obj.user_id], "trial_status", "Статус пробної заявки оновлено", "Перегляньте стан вашого звернення щодо безкоштовного пробного заняття.", "trial")
+        if obj.teacher_id and before.get("teacher_id") != obj.teacher_id:
+            send([obj.teacher_id], "trial_assigned", "Вам призначено пробну заявку", "Адміністрація призначила вам пробну заявку. Умови та час узгоджуються окремо; це ще не заняття в календарі.", "trial")
+    elif label == "enrollments.enrollment":
         if before.get("status") != obj.status and obj.status in {"approved", "rejected", "cancelled"}:
             titles = {"approved": "Заявку підтверджено", "rejected": "Заявку відхилено", "cancelled": "Заявку скасовано"}
             send([obj.student_id], "enrollment_status", titles[obj.status], f"Курс «{obj.course.title}». Статус і формат доступні у вашому кабінеті.")

@@ -4,6 +4,8 @@ from django.core.exceptions import ValidationError
 from django.forms.models import BaseInlineFormSet
 
 from enrollments.models import Enrollment
+from enrollments.trial_models import TrialGroupAdmission
+from enrollments.trial_services import trial_storage_ready
 from users.teacher_assignment import eligible_teachers
 
 from .models import Attendance, GroupMembership, StudyGroup
@@ -88,6 +90,13 @@ class MembershipInline(MembershipDates, admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class TrialAdmissionInline(admin.StackedInline):
+    model = TrialGroupAdmission
+    extra = 1
+    max_num = 1
+    can_delete = False
+
+
 @admin.register(StudyGroup)
 class StudyGroupAdmin(ArchiveAdmin):
     form = StudyGroupAdminForm
@@ -95,7 +104,15 @@ class StudyGroupAdmin(ArchiveAdmin):
     readonly_fields = ("participants", "vacancies")
     list_filter = ("course", "is_active")
     search_fields = ("name", "course__title")
-    inlines = (MembershipInline,)
+    inlines = (MembershipInline, TrialAdmissionInline)
+
+    def get_inline_instances(self, request, obj=None):
+        inlines = super().get_inline_instances(request, obj)
+        # Existing group POSTs without the new optional formset must keep working.
+        # Omitting it leaves the trial policy unchanged (closed by default).
+        if not trial_storage_ready() or (request.method == "POST" and "trial_admission-TOTAL_FORMS" not in request.POST):
+            return [inline for inline in inlines if not isinstance(inline, TrialAdmissionInline)]
+        return inlines
 
     @admin.display(description="Учасників")
     def participants(self, obj):
