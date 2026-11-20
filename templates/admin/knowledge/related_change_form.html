@@ -1,0 +1,18 @@
+{% extends "admin/change_form.html" %}
+{% block form_top %}
+{{ block.super }}
+{% if parent_assessment %}
+<div class="knowledge-guide">
+    <p><strong>Тест: {{ parent_assessment.title }}</strong></p>
+    <p><a href="{{ parent_assessment_url }}#knowledge-questions">← Повернутися до тесту</a></p>
+    <p>«Зберегти» повертає до тесту. «Зберегти і продовжити редагування» залишає на цій сторінці. Зміна навчального змісту приховає опублікований тест до повторної перевірки.</p>
+    {% if reading_add_url %}<p>Для читання оберіть текст нижче. Кнопка «+» поруч із полем відкриває стандартне вікно створення тексту й підставляє його після збереження. <a href="{{ reading_list_url }}">Усі тексти цього тесту</a>.</p>{% endif %}
+</div>
+{% else %}
+<div class="knowledge-guide"><p>Оберіть тест. Зручніше починати зі сторінки <a href="{% url 'admin:knowledge_assessment_changelist' %}">«Тести»</a> — тоді зв’язок буде заповнено автоматично.</p></div>
+{% endif %}
+{% endblock %}
+{% block object-tools-items %}
+{% if parent_assessment %}<li><a href="{{ parent_assessment_url }}#knowledge-questions">До тесту</a></li>{% endif %}
+{{ block.super }}
+{% endblock %}

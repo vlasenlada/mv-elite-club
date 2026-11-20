@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{% block title %}M&V Elite Club{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/learning.css' %}?v=notifications-20261116-2">
@@ -24,6 +25,7 @@
             <nav class="menu">
                 <a href="/">Головна</a>
                 <a href="{% url 'course_list' %}">Наші курси</a>
+                <a href="{% url 'knowledge:index' %}">Перевір свої знання</a>
                 <a href="/#about">Про школу</a>
                 <a href="/#contacts">Контакти</a>
             </nav>

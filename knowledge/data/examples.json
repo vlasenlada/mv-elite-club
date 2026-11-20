@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "tests": [
+    {
+      "title": "Англійська для початківців: ознайомчий тест", "slug": "starter-skills", "subject": "english", "audience": "Початкові навички", "estimated_minutes": 5,
+      "description": "Авторський навчальний приклад для знайомства з форматом. Не стандартизована оцінка мовного рівня.",
+      "source_notes": "Оригінальні завдання M&V Knowledge Check, підготовлені для перевірки модуля. Потребують методичної перевірки.",
+      "passages": [{"key": "garden", "title": "Mila's garden", "text": "Mila has a small garden. She grows tomatoes with her grandfather. On Saturday mornings they water the plants together."}],
+      "questions": [
+        {"prompt": "Оберіть слово: She ___ to school every day.", "topic": "Present Simple", "explanation": "Із she у Present Simple до go додаємо -es: she goes.", "options": [{"text": "go", "is_correct": false}, {"text": "goes", "is_correct": true}, {"text": "going", "is_correct": false}]},
+        {"prompt": "Оберіть усі назви фруктів.", "kind": "multiple", "topic": "Базова лексика", "explanation": "Apple — яблуко, pear — груша. Chair — стілець.", "options": [{"text": "apple", "is_correct": true}, {"text": "pear", "is_correct": true}, {"text": "chair", "is_correct": false}]},
+        {"prompt": "Коли Mila поливає рослини з дідусем?", "topic": "Читання", "passage": "garden", "explanation": "У тексті сказано: On Saturday mornings — у суботу вранці.", "options": [{"text": "On Saturday mornings", "is_correct": true}, {"text": "Every Friday evening", "is_correct": false}]}
+      ]
+    },
+    {
+      "title": "Англійська 1–4 класи: ознайомчі завдання", "slug": "primary-skills", "subject": "english", "grade_band": "primary", "audience": "1–4 класи", "estimated_minutes": 4,
+      "description": "Два авторські приклади базових навичок. Не визначає загальний мовний рівень.", "source_notes": "Оригінальні приклади для перевірки функціональності; методична перевірка ще потрібна.",
+      "questions": [
+        {"prompt": "Оберіть слово: I ___ a pupil.", "topic": "Дієслово to be", "explanation": "Із займенником I використовуємо am: I am a pupil.", "options": [{"text": "am", "is_correct": true}, {"text": "is", "is_correct": false}, {"text": "are", "is_correct": false}]},
+        {"prompt": "Оберіть усі назви кольорів.", "kind": "multiple", "topic": "Кольори", "explanation": "Red — червоний, blue — синій. Book — книга.", "options": [{"text": "red", "is_correct": true}, {"text": "blue", "is_correct": true}, {"text": "book", "is_correct": false}]}
+      ]
+    },
+    {
+      "title": "Англійська 5–9 класи: ознайомчі завдання", "slug": "middle-skills", "subject": "english", "grade_band": "middle", "audience": "5–9 класи", "category": "grammar", "estimated_minutes": 4,
+      "description": "Два авторські приклади граматики й лексики. Не стандартизована діагностика A1–B2.", "source_notes": "Авторські навчальні приклади, без методичної апробації.",
+      "questions": [
+        {"prompt": "Оберіть слово: We ___ to the park yesterday.", "topic": "Past Simple", "explanation": "Yesterday указує на минулий час. Минула форма go — went.", "options": [{"text": "go", "is_correct": false}, {"text": "went", "is_correct": true}, {"text": "goes", "is_correct": false}]},
+        {"prompt": "Оберіть усі слова, що описують погоду.", "kind": "multiple", "topic": "Погода", "explanation": "Rainy означає дощовий, windy — вітряний. Kitchen — кухня.", "options": [{"text": "rainy", "is_correct": true}, {"text": "windy", "is_correct": true}, {"text": "kitchen", "is_correct": false}]}
+      ]
+    },
+    {
+      "title": "Англійська для підготовки до НМТ: приклади", "slug": "nmt-skills-example", "subject": "english", "grade_band": "nmt", "category": "reading", "audience": "Підготовка до НМТ", "estimated_minutes": 5,
+      "description": "Авторські приклади читання та граматики. Не імітує повний НМТ і не прогнозує бал.", "source_notes": "Оригінальні завдання для перевірки модуля; потрібна апробація та звірка з програмою НМТ.",
+      "passages": [{"key": "library", "title": "A notice", "text": "The town library will open an hour later on Monday because staff will be installing new reading lamps. All borrowed books can still be returned through the outside box."}],
+      "questions": [
+        {"prompt": "Яка основна мета повідомлення?", "topic": "Мета тексту", "passage": "library", "explanation": "Повідомлення пояснює тимчасову зміну часу відкриття бібліотеки й спосіб повернення книжок.", "options": [{"text": "Пояснити тимчасову зміну роботи бібліотеки", "is_correct": true}, {"text": "Запросити на продаж книжок", "is_correct": false}, {"text": "Повідомити про закриття бібліотеки назавжди", "is_correct": false}]},
+        {"prompt": "Оберіть слово: If I had more time, I ___ read more books.", "topic": "Умовні речення", "difficulty": "medium", "explanation": "У другому типі умовних речень уживаємо If + Past Simple, would + інфінітив.", "options": [{"text": "would", "is_correct": true}, {"text": "will", "is_correct": false}, {"text": "am", "is_correct": false}]}
+      ]
+    },
+    {
+      "title": "Математика 1–4 класи: ознайомчі завдання", "slug": "primary-skills", "subject": "math", "grade_band": "primary", "audience": "1–4 класи", "estimated_minutes": 4,
+      "description": "Два авторські приклади лічби й текстових задач. Не повна перевірка програми початкової школи.", "source_notes": "Оригінальні навчальні приклади для перевірки функціональності.",
+      "questions": [
+        {"prompt": "Обчисли: 8 + 7.", "topic": "Додавання", "explanation": "8 + 7 = 8 + 2 + 5 = 15.", "options": [{"text": "14", "is_correct": false}, {"text": "15", "is_correct": true}, {"text": "16", "is_correct": false}]},
+        {"prompt": "У Марка було 12 олівців. Він подарував 4. Скільки олівців залишилося?", "kind": "numeric", "topic": "Текстові задачі", "numeric_answer": "8", "explanation": "Від початкової кількості віднімаємо подаровані олівці: 12 − 4 = 8."}
+      ]
+    },
+    {
+      "title": "Математика 5–9 класи: ознайомчі завдання", "slug": "middle-skills", "subject": "math", "grade_band": "middle", "audience": "5–9 класи", "estimated_minutes": 4,
+      "description": "Авторські приклади цілих чисел і подільності. Для кожного класу можна створити окремий тест.", "source_notes": "Оригінальні навчальні приклади для перевірки функціональності.",
+      "questions": [
+        {"prompt": "Обчисли: −3 + 7.", "kind": "numeric", "topic": "Цілі числа", "numeric_answer": "4", "explanation": "Від −3 рухаємося на 7 одиниць праворуч: отримуємо 4."},
+        {"prompt": "Оберіть усі числа, що діляться на 3 без остачі.", "kind": "multiple", "topic": "Подільність", "explanation": "6 = 3 × 2 і 12 = 3 × 4. Число 8 не ділиться на 3 без остачі.", "options": [{"text": "6", "is_correct": true}, {"text": "12", "is_correct": true}, {"text": "8", "is_correct": false}]}
+      ]
+    },
+    {
+      "title": "Математика для підготовки до НМТ: приклади", "slug": "nmt-skills-example", "subject": "math", "grade_band": "nmt", "audience": "Підготовка до НМТ", "estimated_minutes": 5,
+      "description": "Два авторські приклади алгебри й імовірності. Не повний НМТ і не прогноз бала.", "source_notes": "Оригінальні приклади; потрібна методична перевірка та звірка з програмою НМТ.",
+      "questions": [
+        {"prompt": "Розв’яжи рівняння 2x + 3 = 11. У відповідь запиши x.", "kind": "numeric", "topic": "Рівняння", "numeric_answer": "4", "explanation": "2x = 11 − 3 = 8, тому x = 8 : 2 = 4."},
+        {"prompt": "У непрозорому мішечку 3 сині та 2 червоні кульки. Яка ймовірність випадково витягнути синю?", "topic": "Імовірність", "difficulty": "medium", "explanation": "Усього 5 кульок, з них 3 сині. Ймовірність — 3/5.", "options": [{"text": "3/5", "is_correct": true}, {"text": "2/5", "is_correct": false}, {"text": "1/2", "is_correct": false}]}
+      ]
+    }
+  ]
+}

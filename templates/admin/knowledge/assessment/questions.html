@@ -1,0 +1,19 @@
+<div class="knowledge-question-list" id="knowledge-questions">
+    <p><a class="addlink" href="{% url 'admin:knowledge_question_add' %}?assessment={{ test.pk }}">Додати запитання до цього тесту</a></p>
+    <p><a href="{% url 'admin:knowledge_question_changelist' %}?assessment__id__exact={{ test.pk }}">Змінити порядок і активність списком</a>. Варіанти та правильні відповіді редагуються всередині запитання.</p>
+    {% if questions %}<p class="help">На вузькому екрані таблицю можна гортати вбік.</p><div class="knowledge-table-scroll" tabindex="0" role="region" aria-label="Запитання тесту — таблиця з горизонтальним прокручуванням"><table>
+        <thead><tr><th scope="col">Порядок</th><th scope="col">Запитання</th><th scope="col">Тип / тема</th><th scope="col">Участь</th><th scope="col">Дії</th></tr></thead>
+        <tbody>{% for question in questions %}<tr>
+            <td>{{ question.order }}</td>
+            <td><a href="{% url 'admin:knowledge_question_change' question.pk %}">{{ question.prompt|default:"Без формулювання"|truncatechars:110 }}</a>{% if question.passage %}<br><small>Текст: <a href="{% url 'admin:knowledge_passage_change' question.passage_id %}">{{ question.passage }}</a></small>{% endif %}</td>
+            <td>{{ question.get_kind_display }}<br><small>{{ question.topic }} · {{ question.get_difficulty_display }}</small></td>
+            <td>{% if question.is_active %}Активне{% else %}Не входить до спроби{% endif %}</td>
+            <td><a href="{% url 'admin:knowledge_question_change' question.pk %}">Редагувати</a><br><a href="{% url 'admin:knowledge_question_delete' question.pk %}">Видалити…</a></td>
+        </tr>{% endfor %}</tbody>
+    </table></div>{% else %}<p>Запитань ще немає. Додайте перше — тест підставиться автоматично.</p>{% endif %}
+    {% if test.subject == "english" %}
+    <h3>Тексти для читання</h3>
+    <p><a class="addlink" href="{% url 'admin:knowledge_passage_add' %}?assessment={{ test.pk }}">Додати текст до цього тесту</a></p>
+    <ul>{% for passage in passages %}<li><a href="{% url 'admin:knowledge_passage_change' passage.pk %}">{{ passage }}</a></li>{% empty %}<li>Текстів ще немає. Один текст можна використати в кількох запитаннях.</li>{% endfor %}</ul>
+    {% endif %}
+</div>

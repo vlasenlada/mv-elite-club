@@ -1,0 +1,19 @@
+.app-knowledge .knowledge-guide{background:var(--darkened-bg);border:1px solid var(--hairline-color);border-radius:4px;padding:16px 20px;margin:0 0 20px;max-width:1100px;line-height:1.6;box-sizing:border-box}
+.app-knowledge .knowledge-guide h2{background:none;color:var(--body-fg);font-size:17px;margin:0 0 10px;padding:0}
+.app-knowledge .knowledge-guide p{margin:8px 0}
+.app-knowledge .knowledge-guide li{margin:5px 0}
+.app-knowledge .knowledge-ready{border-left:4px solid var(--link-fg)}
+.app-knowledge .knowledge-needs-work{border-left:4px solid var(--error-fg)}
+.app-knowledge .knowledge-question-list{max-width:1100px;min-width:0;line-height:1.6}
+.app-knowledge .knowledge-question-list table{width:100%;min-width:620px}
+.app-knowledge .knowledge-question-list th,.app-knowledge .knowledge-question-list td{white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+.app-knowledge .knowledge-table-scroll{overflow-x:auto;max-width:100%;margin:14px 0}
+.app-knowledge .knowledge-question-list td:nth-child(2){min-width:140px}
+.app-knowledge .field-question_links .readonly{max-width:100%;padding-right:0}
+.app-knowledge .knowledge-publishing{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:flex-start}
+.app-knowledge .knowledge-publishing p{width:100%;margin:0;text-align:left}
+.app-knowledge .knowledge-publishing input{white-space:normal;min-height:44px}
+.app-knowledge textarea{max-width:100%;box-sizing:border-box}
+.app-knowledge .inline-group textarea{min-width:150px;max-width:420px}
+.app-knowledge #id_title,.app-knowledge #id_audience,.app-knowledge #id_seo_title,.app-knowledge #id_seo_description{width:min(650px,100%);box-sizing:border-box}
+@media(max-width:767px){.app-knowledge .knowledge-guide{padding:14px}.app-knowledge .knowledge-publishing input{width:100%;margin:0}.app-knowledge .field-question_links .readonly{padding:0}.app-knowledge .knowledge-question-list td{padding:8px}.app-knowledge select{max-width:100%}}

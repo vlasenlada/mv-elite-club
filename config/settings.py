@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "learning",
     "classrooms",
     "notifications.apps.NotificationsConfig",
+    "knowledge.apps.KnowledgeConfig",
 ]
 
 MIDDLEWARE = [

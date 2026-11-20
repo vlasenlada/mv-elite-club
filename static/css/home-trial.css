@@ -1,0 +1,19 @@
+/* Homepage additions only; the existing course palette remains unchanged. */
+.home-trial-hero .hero-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:500px;gap:12px}
+.home-trial-hero .hero-actions .btn{display:flex;align-items:center;justify-content:center;text-align:center;min-height:48px;white-space:normal}
+.home-trial-hero .home-trial-primary{grid-column:1/-1}
+.home-trial-hint{font-size:13px;line-height:1.6;margin:14px 0 0;max-width:500px;color:#493538}
+.home-trial-info{padding:32px 0 0}
+.home-trial-panel{padding:28px;background:var(--white);border:1px solid var(--sand);border-radius:12px}
+.home-trial-heading h2{font:400 clamp(26px,3vw,34px)/1.3 "Playfair Display",Georgia,serif;color:var(--burgundy);margin:8px 0 22px}
+.home-trial-steps{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:0;padding:0}
+.home-trial-steps li{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.home-trial-steps .academy-icon{width:24px;height:24px;flex:0 0 24px;color:var(--burgundy);margin-top:2px}
+.home-trial-steps h3{font-size:15px;line-height:1.5;color:var(--burgundy);margin:0 0 5px}
+.home-trial-steps p{font-size:14px;line-height:1.65;margin:0}
+.home-trial-footer{display:flex;align-items:center;justify-content:space-between;gap:28px;border-top:1px solid var(--sand);margin-top:22px;padding-top:18px}
+.home-trial-footer p{max-width:740px;font-size:13px;line-height:1.7;margin:0}
+.home-trial-footer a{margin:0;flex-shrink:0;min-height:40px;display:inline-flex;align-items:center}
+.home-trial-hero .btn:focus-visible,.home-trial-info a:focus-visible{outline:3px solid var(--burgundy);outline-offset:4px}
+@media(max-width:850px){.home-trial-footer{align-items:flex-start;flex-direction:column;gap:10px}.home-trial-steps{gap:16px}}
+@media(max-width:600px){.home-trial-panel{padding:22px}.home-trial-steps{grid-template-columns:1fr;gap:16px}.home-trial-hero .hero-actions .btn{padding:13px 12px}.home-trial-info{padding-top:24px}.home-trial-heading h2{margin-bottom:18px}}

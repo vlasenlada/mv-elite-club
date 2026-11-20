@@ -1,12 +1,15 @@
 
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}M&V Elite Club | Онлайн-школа{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/home-trial.css' %}">
+<link rel="stylesheet" href="{% static 'css/knowledge.css' %}?v=knowledge-20261120">
 
 <!-- ГОЛОВНИЙ БЛОК -->
-<section class="hero">
+<section class="hero home-trial-hero">
     <div class="container hero-content">
 
         <div class="hero-text">
@@ -25,7 +28,10 @@
             </p>
 
             <div class="hero-actions">
-                <a href="#courses" class="btn btn-main">
+                <a href="{% url 'course_list' %}" class="btn btn-main home-trial-primary">
+                    Записатися на безкоштовне пробне
+                </a>
+                <a href="#courses" class="btn btn-light">
                     Обрати напрям
                 </a>
 
@@ -33,6 +39,7 @@
                     Дізнатися більше
                 </a>
             </div>
+            <p class="home-trial-hint">Спершу обери курс у каталозі. Реєстрація для пробного не потрібна.</p>
         </div>
 
         <div class="hero-decoration">
@@ -46,7 +53,20 @@
     </div>
 </section>
 
+<section class="home-trial-info" aria-labelledby="home-trial-title">
+    <div class="container home-trial-panel">
+        <div class="home-trial-heading"><p class="eyebrow">БЕЗКОШТОВНЕ ПРОБНЕ</p><h2 id="home-trial-title">Почни зі знайомства</h2></div>
+        <ol class="home-trial-steps">
+            <li>{% include 'components/icon.html' with name='person' %}<div><h3>Знайомство з викладачем</h3><p>Познайомся з підходом до навчання.</p></div></li>
+            <li>{% include 'components/icon.html' with name='target' %}<div><h3>Твої навчальні потреби</h3><p>Разом визначимо рівень, цілі й запити.</p></div></li>
+            <li>{% include 'components/icon.html' with name='check' %}<div><h3>Подальше навчання</h3><p>Погодимо формат і наступні кроки.</p></div></li>
+        </ol>
+        <div class="home-trial-footer"><p>Індивідуальне пробне триває <strong>20–30 хвилин</strong>. Групове можливе під час формування групи або на початку навчання — після погодження адміністрацією.</p><a class="elite-text-link" href="{% url 'course_list' %}">Обрати курс для пробного →</a></div>
+    </div>
+</section>
+
 <!-- ПРО НАШУ ШКОЛУ -->
+<section class="kc-home-entry"><div class="container"><div class="elite-panel"><p class="eyebrow">M&V KNOWLEDGE CHECK</p><h2>Перевір свої знання</h2><p>Безкоштовні тести з англійської та математики: без реєстрації, з поясненнями й рекомендаціями навчання.</p><a class="btn btn-main" href="{% url 'knowledge:index' %}">Обрати безкоштовний тест →</a></div></div></section>
 <section class="intro" id="about">
     <div class="container intro-content">
 

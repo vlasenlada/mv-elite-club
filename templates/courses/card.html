@@ -11,4 +11,5 @@
         {% endfor %}
     </div>
     <a href="{{ course.get_absolute_url }}" class="elite-text-link academy-course-link">Відкрити програму {% include "components/icon.html" with name="arrow" %}</a>
+    {% if catalog_card %}<a href="{% url 'trial_request' course.pk %}" class="elite-text-link">Безкоштовне пробне →</a>{% endif %}
 </article>

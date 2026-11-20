@@ -1,0 +1,5 @@
+{% load static %}
+<meta name="description" content="{{ seo_description }}">
+<link rel="canonical" href="{{ canonical }}">
+{% if filtered %}<meta name="robots" content="noindex, follow">{% endif %}
+<link rel="stylesheet" href="{% static 'css/knowledge.css' %}?v=knowledge-20261120">

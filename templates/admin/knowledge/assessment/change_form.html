@@ -1,0 +1,28 @@
+{% extends "admin/change_form.html" %}
+{% block form_top %}
+{{ block.super }}
+<div class="knowledge-guide">
+    <h2>Створення тесту крок за кроком</h2>
+    <ol><li>Збережіть основну інформацію як чернетку.</li><li>Додайте запитання й правильні відповіді.</li><li>Налаштуйте діапазони результатів і рекомендації курсів нижче.</li><li>Натисніть «Зберегти й перевірити», виправте помилки та опублікуйте.</li></ol>
+    <p><a href="#knowledge-questions">До запитань</a> · <a href="#result_bands-group">До результатів</a> · <a href="#recommendations-group">До рекомендацій</a> · <a href="#knowledge-publishing">До публікації</a></p>
+</div>
+{% if knowledge_readiness %}
+<section class="knowledge-guide {% if knowledge_readiness.ready %}knowledge-ready{% else %}knowledge-needs-work{% endif %}" aria-labelledby="knowledge-readiness-title">
+    <h2 id="knowledge-readiness-title">Перевірка збереженої версії: {% if knowledge_readiness.ready %}готовий до публікації{% else %}потрібні виправлення{% endif %}</h2>
+    <p>Активних запитань: {{ knowledge_readiness.active_count }}. Ця перевірка не підтверджує методичну якість чи рівень CEFR.</p>
+    {% if knowledge_readiness.issues %}<ul class="errorlist">{% for issue in knowledge_readiness.issues %}<li>{% if issue.url %}<a href="{{ issue.url }}">{{ issue.message }}</a>{% else %}{{ issue.message }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+    {% if knowledge_readiness.warnings %}<details><summary>Необов’язкові налаштування та пояснення</summary><ul>{% for warning in knowledge_readiness.warnings %}<li>{{ warning }}</li>{% endfor %}</ul></details>{% endif %}
+</section>
+{% endif %}
+{% endblock %}
+{% block submit_buttons_bottom %}
+{% if has_change_permission %}
+<div class="submit-row knowledge-publishing" id="knowledge-publishing">
+    <p>Кнопки нижче спочатку зберігають заповнені поля, результати та рекомендації.</p>
+    <input type="submit" name="_check" value="Зберегти й перевірити">
+    <input type="submit" name="_publish" value="Зберегти й опублікувати" class="default">
+    {% if original.is_published %}<input type="submit" name="_hide" value="Зберегти й приховати">{% endif %}
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
